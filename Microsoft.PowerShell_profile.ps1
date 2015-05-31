@@ -8,6 +8,8 @@ Import-Module PsReadLine
 # alias
 New-Alias ll ls
 New-Alias open start
+New-Alias grep Select-String
+New-Alias gch Get-ChildItem
 New-Alias dig "C:\Program Files\BIND\dig.exe"
 New-Alias lame "C:\Program Files\lame\lame.exe"
 New-Alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
