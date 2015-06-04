@@ -15,6 +15,7 @@ New-Alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 
 # func
 function which ($com) { (Get-Command -All $com).Definition }
+function tail ($file) { Get-Content $file -Tail 10 -Wait }
 
 
 # home
