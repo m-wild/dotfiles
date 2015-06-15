@@ -13,7 +13,9 @@ New-Alias gch Get-ChildItem
 New-Alias dig "C:\Program Files\BIND\dig.exe"
 New-Alias lame "C:\Program Files\lame\lame.exe"
 New-Alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
+New-Alias vi npp
 New-Alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
+New-Alias ssh putty
 
 # func
 function which ($com) { (Get-Command -All $com).Definition }
