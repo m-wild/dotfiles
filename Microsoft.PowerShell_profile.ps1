@@ -19,6 +19,7 @@ New-Alias ssh putty
 
 # func
 function which ($com) { (Get-Command -All $com).Definition }
+function tail ($file) { Get-Content $file -Tail 10 -Wait }
 
 
 # home
