@@ -2,7 +2,6 @@
 ## michael@mwild.me
 
 # alias and functions
-
 New-Alias open start
 New-Alias grep Select-String
 New-Alias gch Get-ChildItem
