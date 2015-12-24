@@ -1,0 +1,13 @@
+"" _vimrc
+"" michael@mwild.me
+
+" include the system vimrc
+source $VIM/_vimrc
+
+" use the windows clipboard
+set clipboard=unnamed
+
+" behave mswin causes issues
+" this works as expected
+behave xterm
+
