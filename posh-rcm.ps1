@@ -77,26 +77,36 @@ process
             $Path = "$PSScriptRoot\data\"
         }
 
-        foreach ($dir in Get-ChildItem -Path $Path) 
+        foreach ($module in Get-ChildItem -Path $Path) 
         {
-            Write-Host "Scanning directory data\$($dir.Name)..." -ForegroundColor Green
+            Write-Host "Scanning directory data\$($module.Name)..." -ForegroundColor Green
 
             # find all directories with conf       
-            $conf = Get-ChildItem -Path $dir.FullName -Filter "_conf"
+            $conf = Get-ChildItem -Path $module.FullName -Filter "_conf"
             if (!$conf) 
             {
-                Write-Host "_conf missing for $($dir.Name) ...skipping" -ForegroundColor Yellow
+                Write-Host "_conf missing for $($module.Name) ...skipping" -ForegroundColor Yellow
             }
             else
             {
                 # read the conf file
+                $target = $null
                 $target = (Select-String -Path $conf -Pattern $pattern_target).Line
+				if (!$target)
+				{
+					throw "Pattern not found : '$pattern_target'"
+				}
                 $target = $target.Substring($pattern_target.Length)
-                $target = Join-Path -path $dir.FullName -ChildPath $target
+                $target = Join-Path -path $module.FullName -ChildPath $target
                 $target = [System.Environment]::ExpandEnvironmentVariables($target)
                 $target = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($target)
             
+                $link = $null
                 $link = (Select-String -Path $conf -Pattern $pattern_link).Line
+                if (!$link)
+                {
+                    throw "Pattern not found : '$pattern_link'"
+                }
                 $link = $link.Substring($pattern_link.Length)
                 $link = [System.Environment]::ExpandEnvironmentVariables($link)
                 $link = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($link)
@@ -104,7 +114,7 @@ process
                 # remove existing
                 if ($Clean -or $Rebuild) 
                 {
-                    Write-Host "Cleaning $($dir.Name)..."
+                    Write-Host "Cleaning $($module.Name)..."
 
                     if (-not (Test-Path -Path $link)) 
                     {
@@ -124,6 +134,14 @@ process
                     Write-Host "Target = $target"
                     Write-Host "Link = $link"
 
+                    # create the link directory structure if it doesn't already exist
+                    $link_dir = Split-Path -Path $link
+                    if (-not (Test-Path -Path $link_dir))
+                    {
+                        # swallow the output into $res
+                        $res = New-Item -Path $link_dir -ItemType Directory
+                    }
+                    
                     New-Symlink -Target $target -Link $link
                 }
             }
@@ -134,8 +152,7 @@ process
     }
     catch
     {
-        # simply rethrow, we just want to make sure we fail on the first error
+        # rethrow - we just want to make sure we fail completely on the first error
         throw
     }
 }
-

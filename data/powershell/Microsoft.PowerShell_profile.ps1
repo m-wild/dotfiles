@@ -6,7 +6,7 @@
 new-alias open start
 new-alias grep Select-String
 new-alias gch Get-ChildItem
-function ll { ls -Force }
+function ll ($params)  { ls -Force $params }
 
 # emulation of linux "which"
 function which ($com) { (Get-Command -All $com).Definition }
