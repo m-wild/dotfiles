@@ -2,7 +2,6 @@
 
 Powershell .rc manager
 
-------
 
 ### What is this?
 
@@ -11,11 +10,11 @@ Allows you to manage your .rc files with git by creating symlinks from a single 
 
 ### Usage
 
-1. Add `[...]posh-rcm\bin` to your path.
-2. See `posh-rcm -Help` for detailed usage instructions.
+1. Clone
+2. Add `[...]posh-rcm\bin` to your path.
+3. See `posh-rcm -Help` for detailed usage instructions.
 
 
-------
 
 ### Licence
 
