@@ -16,43 +16,64 @@ process
     try 
     {
         # includes
-        . "$PSScriptRoot\lib\secutil.ps1"
-        . "$PSScriptRoot\lib\symlink.ps1"
+        . "$PSScriptRoot\..\lib\secutil.ps1"
+        . "$PSScriptRoot\..\lib\symlink.ps1"
         
         $pattern_target = "target="
         $pattern_link = "link="
-        
+		
+		$ascii_logo = 
+@"
+             _                     
+ ___ ___ ___| |_ ___ ___ ___ _____ 
+| . | . |_ -|   |___|  _|  _|     |
+|  _|___|___|_|_|   |_| |___|_|_|_|
+|_|     
+"@
+
+		Write-Host $ascii_logo -ForegroundColor Cyan
+		
+		
+		# handle -Rebuild switch
+		if ($Rebuild)
+		{
+			$Clean = $true
+			$Build = $true
+		}
+		
+		     
         # usage information
-        if ((!$Build -and !$Clean -and !$Rebuild) -or ($Help))
+        if ((!$Build -and !$Clean) -or ($Help))
         {
             Write-Host "Powershell rc manager"
             Write-Host "Creates symlinks for your .*rc files"
+            Write-Host "usage:"	-NoNewLine -ForegroundColor Yellow
+				   Write-Host " posh-rcm" -NoNewLine
+							 Write-Host " [-Build] [-Clean] [-Rebuild] [-Path <path_to_data_directory>]" -ForegroundColor Cyan
             Write-Host ""
-            Write-Host "Usage:"
-            Write-Host "    posh-rcm [-Build] [-Clean] [-Rebuild] [-Path <path_to_data_directory>]"
-            Write-Host ""
-            Write-Host "    -Build    create symlinks as defined in data\*\_conf"
-            Write-Host "    -Clean    remove existing symlinks"
-            Write-Host "    -Rebuild  alias for -Clean -Build"
-            Write-Host "    -Path     path to data directory (default: .\data)"
+            Write-Host "  -Build    create symlinks as defined in data\*\_conf"
+            Write-Host "  -Clean    remove existing symlinks"
+            Write-Host "  -Rebuild  alias for -Clean -Build"
+            Write-Host "  -Path     path to data directory (default: .\data)"
 
             if (!$Help) 
             {
-                Write-Host "    -Help     display additional help"
+                Write-Host "  -Help     display additional help"
             }
             else 
             {
-                Write-Host "    -Help     display this text"
+                Write-Host "  -Help     display this text"
                 Write-Host ""
+				Write-Host "Help:" -ForegroundColor Yellow
                 Write-Host "Place any scripts you want managed in their own folder under \data"
                 Write-Host "Add a _conf file with the following content:"
-                Write-Host "    $pattern_target<your_rc_script>"
-                Write-Host "    $pattern_link<the_link_to_create>"
+                Write-Host "  $pattern_target<your_rc_script>"
+                Write-Host "  $pattern_link<the_link_to_create>"
                 Write-Host "Then run:"
-                Write-Host "    posh-rcm -Build"
+                Write-Host "  posh-rcm -Build"
                 Write-Host ""
                 Write-Host "To update existing files:"
-                Write-Host "    posh-rcm -Rebuild"
+                Write-Host "  posh-rcm -Rebuild"
             }
 
             Write-Host ""
@@ -61,7 +82,7 @@ process
 
 
         # we need to be admin for mklink to work
-        if ($Build -or $Rebuild) 
+        if ($Build) 
         {
             $admin = Test-IsAdmin
             if (!$admin) 
@@ -74,12 +95,12 @@ process
         # use the default path if not provided
         if (!$Path)
         {
-            $Path = "$PSScriptRoot\data\"
+            $Path = "$PSScriptRoot\..\data\"
         }
 
         foreach ($module in Get-ChildItem -Path $Path) 
         {
-            Write-Host "Scanning directory data\$($module.Name)..." -ForegroundColor Green
+            Write-Host "scanning directory data\$($module.Name)..." -ForegroundColor Green
 
             # find all directories with conf       
             $conf = Get-ChildItem -Path $module.FullName -Filter "_conf"
@@ -112,10 +133,10 @@ process
                 $link = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($link)
             
                 # remove existing
-                if ($Clean -or $Rebuild) 
+                if ($Clean) 
                 {
-                    Write-Host "Cleaning $($module.Name)..."
-
+					Write-Host ">> cleaning module $($module.Name)..."
+					
                     if (-not (Test-Path -Path $link)) 
                     {
                         Write-Host "$link already clean"
@@ -128,11 +149,12 @@ process
                 }
 
                 # create the symlink
-                if ($Build -or $Rebuild) 
+                if ($Build) 
                 {
-                    Write-Host "Creating symlink..."
-                    Write-Host "Target = $target"
-                    Write-Host "Link = $link"
+					Write-Host ">> creating symlink..."
+                    
+					Write-Host "target = $target"
+                    Write-Host "link = $link"
 
                     # create the link directory structure if it doesn't already exist
                     $link_dir = Split-Path -Path $link
