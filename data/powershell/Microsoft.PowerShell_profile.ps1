@@ -30,7 +30,9 @@ new-alias less "C:\Program Files (x86)\GnuWin32\bin\less.exe"
 # ssh (putty)
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias ssh putty
-new-alias plink 'C:\Program Files (x86)\PuTTY\plink.exe'
+new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
+new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
+function ssh-agent ([switch]$auto,$params) { if ($auto) { pageant $params "g:\system\keys\id_rsa.ppk" } else { pageant $params } }
 
 # media
 new-alias youtube-dl "C:\Program Files (x86)\youtube-dl\youtube-dl.exe"
