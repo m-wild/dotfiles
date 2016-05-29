@@ -41,11 +41,19 @@ new-alias msbuild msbuild-v140
 # git
 function git-log ($args) { git log --pretty=oneline --decorate --graph --abbrev-commit $args }
 
-
+# python
+new-alias py "C:\Windows\py.exe"
+new-alias python "~\AppData\Local\Programs\Python\Python35-32\python.exe"
+new-alias pip "~\AppData\Local\Programs\Python\Python35-32\Scripts\pip.exe"
 
 # media
-#new-alias youtube-dl "C:\Program Files (x86)\youtube-dl\youtube-dl.exe"
-#new-alias ffmpeg "C:\Program Files\ffmpeg\bin\ffmpeg.exe"
+new-alias youtube-dl "C:\Program Files (x86)\youtube-dl\youtube-dl.exe"
+new-alias ffmpeg "C:\Program Files\ffmpeg\bin\ffmpeg.exe"
+new-alias ffprobe "C:\Program Files\ffmpeg\bin\ffprobe.exe"
+new-alias ffplay "C:\Program Files\ffmpeg\bin\ffplay.exe"
+
+
+
 
 # test if the current shell is elevated
 function test-isadmin {
