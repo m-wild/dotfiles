@@ -9,6 +9,7 @@ function ll ($params)  { ls -Force $params }
 function reset-color { [Console]::ResetColor() }
 
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
+new-alias vi npp
 
 new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 
@@ -23,13 +24,16 @@ new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias ssh putty
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
-function start-sshagent ([switch]$auto,$params) { if ($auto) { pageant $params "u:\.ssh\id_rsa.ppk" } else { pageant $params } }
+function ssh-agent { pageant "g:\system\keys\id_rsa.ppk" }
 new-alias winscp "C:\Program Files (x86)\WinSCP\winscp.exe"
 new-alias openssl "c:\program files\openssl\bin\openssl.exe"
 
 new-alias dig "C:\Program Files\ISC BIND 9\bin\dig.exe"
 
 new-alias splunk "C:\Program Files\SplunkUniversalForwarder\bin\Splunk.exe"
+
+new-alias chrome "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # build
 new-alias nuget "d:\michael.wildman\tfs\Sourcecode-Dev\BuildProcessTemplates\Scripts\nuget.exe"
@@ -39,7 +43,7 @@ new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
 
 # git
-function git-log ($args) { git log --pretty=oneline --decorate --graph --abbrev-commit $args }
+function git-log { git log --pretty=oneline --decorate --graph --abbrev-commit $args }
 
 # python
 new-alias py "C:\Windows\py.exe"
@@ -65,6 +69,13 @@ function prompt {
 	$isAdmin = test-isadmin
 	$cd = (pwd)
 
+	if ((h).length -gt 0) {
+		add-content -path "~/.logs/shell-history-$(get-date -f 'yyyy-MM').log" `
+			-value "$((h)[-1].StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) [$global:promptPrevDir] $((h)[-1].commandLine)"
+	}
+
+	$global:promptPrevDir = $cd
+
 	if ($isAdmin) {
 		$host.UI.RawUI.WindowTitle = "Admin: $cd"
 		write-host "[$(split-path $cd -leaf)]" -noNewLine
@@ -76,10 +87,13 @@ function prompt {
 	return " "
 }
 
+# set initial "previous" directory
+$global:promptPrevDir = (pwd)
+
 
 # set a new "home" directory
 # Set and force overwrite of the $HOME variable
-Set-Variable HOME "d:\michael.wildman" -Force
+Set-Variable HOME "g:\" -Force
 
-# Set the "~" shortcut value for the FileSystem provider
-(get-psprovider 'FileSystem').Home = "d:\michael.wildman"
+# Set the "~" shortcut value for the provider
+(get-psprovider 'FileSystem').Home = "g:\"
