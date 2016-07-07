@@ -69,13 +69,14 @@ function prompt {
 	$isAdmin = test-isadmin
 	$cd = (pwd)
 
+	# log previous command to file
 	if ((h).length -gt 0) {
 		add-content -path "~/.logs/shell-history-$(get-date -f 'yyyy-MM').log" `
 			-value "$((h)[-1].StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) [$global:promptPrevDir] $((h)[-1].commandLine)"
 	}
-
 	$global:promptPrevDir = $cd
 
+	# pretty print prompt
 	if ($isAdmin) {
 		$host.UI.RawUI.WindowTitle = "Admin: $cd"
 		write-host "[$(split-path $cd -leaf)]" -noNewLine
