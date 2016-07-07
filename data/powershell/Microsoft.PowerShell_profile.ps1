@@ -70,9 +70,11 @@ function prompt {
 	$cd = (pwd)
 
 	# log previous command to file
-	if ((h).length -gt 0) {
+	# only if the history has a new command added
+	if ((h).length -gt $global:promptPrevHistLength) {
 		add-content -path "~/.logs/shell-history-$(get-date -f 'yyyy-MM').log" `
-			-value "$((h)[-1].StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) [$global:promptPrevDir] $((h)[-1].commandLine)"
+			-value "$((h)[-1].StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) $pid [$global:promptPrevDir] $((h)[-1].commandLine)"
+		$global:promptPrevHistLength = (h).length
 	}
 	$global:promptPrevDir = $cd
 
@@ -90,6 +92,7 @@ function prompt {
 
 # set initial "previous" directory
 $global:promptPrevDir = (pwd)
+$global:promptPrevHistLength = 0
 
 
 # set a new "home" directory
