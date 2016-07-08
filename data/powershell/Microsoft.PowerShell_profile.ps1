@@ -1,6 +1,10 @@
 ## powershell profile
 ## michael@mwild.me
 
+$global:ssh_public_id = "u:\.ssh\id_rsa.pub"
+$global:user_home = "d:\michael.wildman"
+$global:log_home = "d:\michael.wildman\.logs"
+
 new-alias open start
 new-alias grep Select-String
 new-alias gch Get-ChildItem
@@ -10,6 +14,7 @@ function reset-color { [Console]::ResetColor() }
 
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
 new-alias vi npp
+new-alias brackets "C:\Program Files (x86)\Brackets\Brackets.exe"
 
 new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 
@@ -24,7 +29,9 @@ new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias ssh putty
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
-function ssh-agent { pageant "g:\system\keys\id_rsa.ppk" }
+
+function ssh-agent { pageant $global:ssh_public_id }
+
 new-alias winscp "C:\Program Files (x86)\WinSCP\winscp.exe"
 new-alias openssl "c:\program files\openssl\bin\openssl.exe"
 
@@ -44,11 +51,13 @@ new-alias msbuild msbuild-v140
 
 # git
 function git-log { git log --pretty=oneline --decorate --graph --abbrev-commit $args }
+new-alias git-tf "D:\michael.wildman\tools\git-tf\git-tf.cmd"
+
 
 # python
 new-alias py "C:\Windows\py.exe"
-new-alias python "~\AppData\Local\Programs\Python\Python35-32\python.exe"
-new-alias pip "~\AppData\Local\Programs\Python\Python35-32\Scripts\pip.exe"
+new-alias python "c:\python\3\python.exe"
+new-alias pip "c:\python\3\Scripts\pip.exe"
 
 # media
 new-alias youtube-dl "C:\Program Files (x86)\youtube-dl\youtube-dl.exe"
@@ -64,6 +73,20 @@ function test-isadmin {
 	return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 }
 
+
+# set initial "previous" directory
+$global:promptPrevDir = (pwd)
+$global:promptPrevHistLength = 0
+
+
+# set a new "home" directory
+# Set and force overwrite of the $HOME variable
+Set-Variable HOME $global:user_home -Force
+
+# Set the "~" shortcut value for the provider
+(get-psprovider 'FileSystem').Home = $global:user_home
+
+
 # custom prompt
 function prompt {
 	$isAdmin = test-isadmin
@@ -72,7 +95,7 @@ function prompt {
 	# log previous command to file
 	# only if the history has a new command added
 	if ((h).length -gt $global:promptPrevHistLength) {
-		add-content -path "~/.logs/shell-history-$(get-date -f 'yyyy-MM').log" `
+		add-content -path "$($global:log_home)/shell-history-$(get-date -f 'yyyy-MM').log" `
 			-value "$((h)[-1].StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) $pid [$global:promptPrevDir] $((h)[-1].commandLine)"
 		$global:promptPrevHistLength = (h).length
 	}
@@ -89,15 +112,3 @@ function prompt {
 	}
 	return " "
 }
-
-# set initial "previous" directory
-$global:promptPrevDir = (pwd)
-$global:promptPrevHistLength = 0
-
-
-# set a new "home" directory
-# Set and force overwrite of the $HOME variable
-Set-Variable HOME "g:\" -Force
-
-# Set the "~" shortcut value for the provider
-(get-psprovider 'FileSystem').Home = "g:\"
