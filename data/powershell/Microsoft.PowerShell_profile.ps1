@@ -31,6 +31,11 @@ new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
 
 function ssh-agent { pageant $global:ssh_public_id }
+function ssh-copy-id {
+	$cred = get-credential
+	get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
+}
+
 
 new-alias winscp "C:\Program Files (x86)\WinSCP\winscp.exe"
 new-alias openssl "c:\program files\openssl\bin\openssl.exe"
