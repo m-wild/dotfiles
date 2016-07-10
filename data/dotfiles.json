@@ -28,5 +28,11 @@
 		"linkFile": "vscode.json",
 		"linkTo": "$env:appdata\\Code\\User\\settings.json",
 		"enabled": true
-	}
+	},
+    {
+        "name": "ahk",
+        "linkFile": "mwil.ahk",
+        "linkTo": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
+        "enabled": true
+    }
 ]
