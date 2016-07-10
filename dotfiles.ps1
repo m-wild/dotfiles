@@ -37,7 +37,7 @@ process
 
     $config = get-content -path (join-path $path "dotfiles.json") -raw | convertfrom-json
 
-    foreach ($dotfile in $config) {
+    foreach ($dotfile in $config | where enabled) {
         write-host ""
         write-host ">> $($dotfile.name)"
 

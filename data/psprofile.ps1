@@ -54,10 +54,7 @@ new-alias tfpt "C:\Program Files (x86)\Microsoft Team Foundation Server 2015 Pow
 new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
 
-# git
-function git-log { git log --pretty=oneline --decorate --graph --abbrev-commit $args }
 new-alias git-tf "D:\michael.wildman\tools\git-tf\git-tf.cmd"
-
 
 # python
 new-alias py "C:\Windows\py.exe"

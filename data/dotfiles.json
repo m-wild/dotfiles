@@ -2,16 +2,25 @@
     {
         "name": "powershell",
         "linkFile": "psprofile.ps1",
-        "linkTo": "$env:userprofile\\Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1"
+        "linkTo": "$env:userprofile\\Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1",
+        "enabled": true
     },
     {
         "name": "ssh",
         "linkFile": "sshconfig",
-        "linkTo": "$env:userprofile\\.ssh\\config"
+        "linkTo": "$env:userprofile\\.ssh\\config",
+        "enabled": true
     },
     {
         "name": "vim",
         "linkFile": "_vimrc",
-        "linkTo": "$env:userprofile\\_vimrc"
+        "linkTo": "$env:userprofile\\_vimrc",
+        "enabled": true
+    },
+    {
+        "name": "git",
+        "linkFile": ".gitconfig",
+        "linkTo": "$env:userprofile\\.gitconfig",
+        "enabled": true
     }
 ]
