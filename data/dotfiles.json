@@ -22,5 +22,11 @@
         "linkFile": ".gitconfig",
         "linkTo": "$env:userprofile\\.gitconfig",
         "enabled": true
-    }
+    },
+	{
+		"name": "vscode",
+		"linkFile": "vscode.json",
+		"linkTo": "$env:appdata\\Code\\User\\settings.json",
+		"enabled": true
+	}
 ]
