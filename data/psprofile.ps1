@@ -1,9 +1,10 @@
 ## powershell profile
 ## michael@mwild.me
 
-$global:ssh_public_id = "u:\.ssh\id_rsa.pub"
-$global:user_home = "d:\michael.wildman"
-$global:log_home = "d:\michael.wildman\.logs"
+# set globals from environment
+$global:ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
+$global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
+$global:log_home = join-path $env:user_home ".logs"
 
 new-alias open start
 new-alias grep Select-String
@@ -30,7 +31,7 @@ new-alias ssh putty
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
 
-function ssh-agent { pageant $global:ssh_public_id }
+function ssh-agent { pageant $global:ssh_private_id }
 function ssh-copy-id {
 	$cred = get-credential
 	get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
@@ -83,10 +84,10 @@ $global:promptPrevHistLength = 0
 
 # set a new "home" directory
 # Set and force overwrite of the $HOME variable
-Set-Variable HOME $global:user_home -Force
+Set-Variable HOME $env:user_home -Force
 
 # Set the "~" shortcut value for the provider
-(get-psprovider 'FileSystem').Home = $global:user_home
+(get-psprovider 'FileSystem').Home = $env:user_home
 
 
 # custom prompt
