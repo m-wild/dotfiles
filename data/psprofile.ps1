@@ -43,10 +43,12 @@ new-alias openssl "c:\program files\openssl\bin\openssl.exe"
 
 new-alias dig "C:\Program Files\ISC BIND 9\bin\dig.exe"
 
-new-alias splunk "C:\Program Files\SplunkUniversalForwarder\bin\Splunk.exe"
+new-alias splunk "C:\Program Files\Splunk\bin\Splunk.exe"
 
 new-alias chrome "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-function google { chrome "https://www.google.co.nz/search?q=$args" }
+new-alias firefox "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+new-alias ff firefox
+function google { ff "https://www.google.co.nz/search?q=$args" }
 
 # build
 new-alias nuget "d:\michael.wildman\tfs\Sourcecode-Dev\BuildProcessTemplates\Scripts\nuget.exe"

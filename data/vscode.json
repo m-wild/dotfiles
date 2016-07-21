@@ -1,4 +1,7 @@
 {
 	"editor.fontSize": 12,
-	"externalTerminal.windowsExec": "powershell"	
+	"externalTerminal.windowsExec": "powershell",
+	"files.associations": {
+		"*.conf": "ini"
+	}
 }
