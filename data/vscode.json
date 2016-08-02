@@ -1,6 +1,7 @@
 {
 	"editor.fontSize": 12,
-	"externalTerminal.windowsExec": "powershell",
+	"terminal.external.windowsExec": "powershell",
+	"terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
 	"files.associations": {
 		"*.conf": "ini"
 	}
