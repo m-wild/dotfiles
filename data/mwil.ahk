@@ -9,7 +9,7 @@ SetTitleMatchMode, 2
 
 ; shell
 ^!PgDn::
-	home := "g:\downloads"
+	EnvGet, home, user_home
 	Run, powershell.exe, %home%
 	return
 

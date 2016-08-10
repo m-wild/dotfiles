@@ -1,7 +1,7 @@
 # http://ben-denham.github.io/git-advanced/
 [user]
 	name = Michael Wildman
-	email = michael@mwild.me
+	# user.email comes from $env:EMAIL
 [core]
 	autocrlf = true
 	editor = 'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
