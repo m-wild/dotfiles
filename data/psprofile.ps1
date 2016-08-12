@@ -1,7 +1,7 @@
 ## powershell profile
 ## michael@mwild.me
 
-# set globals from environment
+# set globals from environment 
 $global:ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
 $global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_home = join-path $env:user_home ".logs"
@@ -47,8 +47,7 @@ new-alias splunk "C:\Program Files\Splunk\bin\Splunk.exe"
 
 new-alias chrome "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 new-alias firefox "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-new-alias ff firefox
-function google { ff "https://www.google.co.nz/search?q=$args" }
+function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # build
 new-alias nuget "d:\michael.wildman\tfs\Sourcecode-Dev\BuildProcessTemplates\Scripts\nuget.exe"
