@@ -1,5 +1,4 @@
 {
-	"editor.fontFamily": "'Source Code Pro', Consolas, monospaced",
 	"editor.fontSize": 12,
 	"terminal.external.windowsExec": "powershell",
 	"terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
