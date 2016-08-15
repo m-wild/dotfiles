@@ -34,5 +34,11 @@
         "linkFile": "mwil.ahk",
         "linkTo": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
         "enabled": true
+    },
+    {
+        "name": "conemu",
+        "linkFile": "ConEmu.xml",
+        "linkTo": "$env:appdata\\ConEmu.xml",
+        "enabled": true
     }
 ]
