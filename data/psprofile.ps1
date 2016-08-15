@@ -25,12 +25,15 @@ function which ($com) { (Get-Command -All $com).Definition }
 # fake tail -f
 function tail ([switch]$f,$file) {  if ($f) { Get-Content $file -Tail 10 -Wait } else { Get-Content $file -Tail 10 } }
 
+
+new-alias conemu 'C:\Program Files\ConEmu\ConEmu64.exe'
+
 # ssh
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
-new-alias ssh putty
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
 
+function ssh { conemu -run "C:\Program Files (x86)\PuTTY\putty.exe" $args }
 function ssh-agent { pageant $global:ssh_private_id }
 function ssh-copy-id {
 	$cred = get-credential

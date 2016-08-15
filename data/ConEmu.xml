@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2016-08-15 21:32:19" build="160724">
+		<key name=".Vanilla" modified="2016-08-15 21:41:31" build="160724">
 			<value name="StartType" type="hex" data="02"/>
 			<value name="CmdLine" type="string" data=""/>
 			<value name="StartTasksFile" type="string" data=""/>
@@ -293,6 +293,7 @@
 			<value name="JumpListAutoUpdate" type="hex" data="01"/>
 			<value name="SaveCmdHistory" type="hex" data="01"/>
 			<value name="CmdLineHistory" type="multi">
+				<line data="{SSH::PuTTY}"/>
 				<line data="{Shells::cmd (Admin)}"/>
 			</value>
 			<value name="ShowHelpTooltips" type="hex" data="01"/>
@@ -585,9 +586,9 @@
 			<value name="Update.DownloadPath" type="string" data="%TEMP%\ConEmu"/>
 			<value name="Update.LeavePackages" type="hex" data="00"/>
 			<value name="Update.PostUpdateCmd" type="string" data="echo Last successful update&gt;ConEmuUpdate.info &amp;&amp; date /t&gt;&gt;ConEmuUpdate.info &amp;&amp; time /t&gt;&gt;ConEmuUpdate.info"/>
-			<key name="Tasks" modified="2016-08-15 21:32:19" build="160724">
+			<key name="Tasks" modified="2016-08-15 21:56:50" build="160724">
 				<value name="Count" type="long" data="10"/>
-				<key name="Task1" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task1" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::cmd}"/>
 					<value name="Flags" type="dword" data="00000002"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -596,7 +597,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task2" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task2" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::cmd (Admin)}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -605,7 +606,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task3" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task3" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::cmd-32}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -614,7 +615,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task4" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task4" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::cmd 64/32}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -624,7 +625,7 @@
 					<value name="Active" type="long" data="1"/>
 					<value name="Count" type="long" data="2"/>
 				</key>
-				<key name="Task5" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task5" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::PowerShell}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -633,7 +634,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task6" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task6" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Shells::PowerShell (Admin)}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -642,7 +643,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task7" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task7" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Bash::Git bash}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -651,7 +652,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task8" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task8" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Helper::Show ANSI colors}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -660,7 +661,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task9" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task9" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{SDK::VS 14.0 x86 tools prompt}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -669,7 +670,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task10" modified="2016-08-15 21:32:19" build="160724">
+				<key name="Task10" modified="2016-08-15 21:56:50" build="160724">
 					<value name="Name" type="string" data="{Tools::Chocolatey (Admin)}"/>
 					<value name="Flags" type="dword" data="00000004"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -678,11 +679,20 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
+				<key name="Task11" modified="2016-08-15 21:45:27" build="160724">
+					<value name="Name" type="string" data="{SSH::PuTTY}"/>
+					<value name="Flags" type="dword" data="00000004"/>
+					<value name="Hotkey" type="dword" data="00000000"/>
+					<value name="GuiArgs" type="string" data="/dir &quot;C:\Program Files (x86)\PuTTY\&quot;"/>
+					<value name="Cmd1" type="string" data="putty.exe -cur_console -load &quot;itvmlin21&quot;"/>
+					<value name="Active" type="long" data="0"/>
+					<value name="Count" type="long" data="1"/>
+				</key>
 			</key>
-			<key name="Apps" modified="2016-08-15 21:32:19" build="160724">
+			<key name="Apps" modified="2016-08-15 21:56:50" build="160724">
 				<value name="Count" type="long" data="0"/>
 			</key>
-			<key name="Colors" modified="2016-08-15 21:32:19" build="160724">
+			<key name="Colors" modified="2016-08-15 21:56:50" build="160724">
 				<value name="Count" type="long" data="0"/>
 			</key>
 		</key>
