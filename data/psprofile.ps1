@@ -6,59 +6,48 @@ $global:ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
 $global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_home = join-path $env:user_home ".logs"
 
+
+# util
 new-alias open start
 new-alias grep Select-String
 new-alias gch Get-ChildItem
 new-alias touch New-Item
 function ll ($params)  { ls -Force $params }
 function reset-color { [Console]::ResetColor() }
+function which ($com) { (Get-Command -All $com).Definition }
+function tail ([switch]$f,$file) {  if ($f) { Get-Content $file -Tail 10 -Wait } else { Get-Content $file -Tail 10 } }
+new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 
+# editors
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
 new-alias vi npp
 new-alias brackets "C:\Program Files (x86)\Brackets\Brackets.exe"
-
-new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
-
-# fake linux 'which'
-function which ($com) { (Get-Command -All $com).Definition }
-
-# fake tail -f
-function tail ([switch]$f,$file) {  if ($f) { Get-Content $file -Tail 10 -Wait } else { Get-Content $file -Tail 10 } }
-
-
-new-alias conemu 'C:\Program Files\ConEmu\ConEmu64.exe'
+new-alias webstorm "C:\Program Files (x86)\JetBrains\WebStorm 2016.2.2\bin\WebStorm.bat"
 
 # ssh
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
-
 function ssh { conemu -run "C:\Program Files (x86)\PuTTY\putty.exe" $args }
 function ssh-agent { pageant $global:ssh_private_id }
 function ssh-copy-id {
 	$cred = get-credential
 	get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
-
-
 new-alias winscp "C:\Program Files (x86)\WinSCP\winscp.exe"
 new-alias openssl "c:\program files\openssl\bin\openssl.exe"
 
-new-alias dig "C:\Program Files\ISC BIND 9\bin\dig.exe"
-
-new-alias splunk "C:\Program Files\Splunk\bin\Splunk.exe"
-
+# web
 new-alias chrome "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 new-alias firefox "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
-# build
+# code/build
 new-alias nuget "d:\michael.wildman\tfs\Sourcecode-Dev\BuildProcessTemplates\Scripts\nuget.exe"
 new-alias tf "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\TF.exe"
 new-alias tfpt "C:\Program Files (x86)\Microsoft Team Foundation Server 2015 Power Tools\TFPT.exe"
 new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
-
 new-alias git-tf "D:\michael.wildman\tools\git-tf\git-tf.cmd"
 
 # python
@@ -72,7 +61,10 @@ new-alias ffmpeg "C:\Program Files\ffmpeg\bin\ffmpeg.exe"
 new-alias ffprobe "C:\Program Files\ffmpeg\bin\ffprobe.exe"
 new-alias ffplay "C:\Program Files\ffmpeg\bin\ffplay.exe"
 
-
+# other
+new-alias conemu "C:\Program Files\ConEmu\ConEmu64.exe"
+new-alias dig "C:\Program Files\ISC BIND 9\bin\dig.exe"
+new-alias splunk "C:\Program Files\Splunk\bin\Splunk.exe"
 
 
 # test if the current shell is elevated
