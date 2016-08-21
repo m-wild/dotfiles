@@ -22,7 +22,6 @@ new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
 new-alias vi npp
 new-alias brackets "C:\Program Files (x86)\Brackets\Brackets.exe"
-new-alias webstorm "C:\Program Files (x86)\JetBrains\WebStorm 2016.2.2\bin\WebStorm.bat"
 
 # ssh
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
