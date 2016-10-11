@@ -17,11 +17,13 @@ function reset-color { [Console]::ResetColor() }
 function which ($com) { (Get-Command -All $com).Definition }
 function tail ([switch]$f,$file) {  if ($f) { Get-Content $file -Tail 10 -Wait } else { Get-Content $file -Tail 10 } }
 new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
+function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$($env:windir)\system32\drivers\etc\hosts" ) }
+function format-json { $args | convertfrom-json | convertto-json }
+new-alias fjson format-json
 
 # editors
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
-new-alias vi npp
-new-alias brackets "C:\Program Files (x86)\Brackets\Brackets.exe"
+new-alias vi subl
 
 # ssh
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
@@ -42,7 +44,7 @@ new-alias firefox "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # code/build
-new-alias nuget "d:\michael.wildman\tfs\Sourcecode-Dev\BuildProcessTemplates\Scripts\nuget.exe"
+new-alias nuget "D:\michael.wildman\tools\NuGet\nuget.exe"
 new-alias tf "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\TF.exe"
 new-alias tfpt "C:\Program Files (x86)\Microsoft Team Foundation Server 2015 Power Tools\TFPT.exe"
 new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
