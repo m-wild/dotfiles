@@ -5,7 +5,8 @@
 
 [core]
 	autocrlf = true
-	editor = 'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+	#editor = 'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+	editor = 'c:/program files/sublime text 3/subl.exe' -n --wait
 
 [push]
 	default = current
@@ -21,6 +22,11 @@
 
 [alias]
 	treelog = "log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold cyan)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+	lga = "log --graph --abbrev-commit --decorate --date=relative --format=oneline"
+	lg = "log --graph --abbrev-commit --decorate --date=relative --format=oneline --first-parent HEAD"
+
+	st = status
+	c = commit
 
 [filter "lfs"]
 	smudge = git-lfs smudge %f
