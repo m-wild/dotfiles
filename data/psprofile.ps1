@@ -24,12 +24,13 @@ new-alias fjson format-json
 # editors
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
 new-alias vi subl
+new-alias bcomp "$($env:programfiles)\beyond compare 4\bcomp.exe"
 
 # ssh
 new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
-function ssh { conemu -run "C:\Program Files (x86)\PuTTY\putty.exe" $args }
+function ssh { putty $args -new_console }
 function ssh-agent { pageant $global:ssh_private_id }
 function ssh-copy-id {
 	$cred = get-credential
