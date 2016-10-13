@@ -9,7 +9,7 @@ SetTitleMatchMode, 2
 
 ; shell
 ^!PgDn::
-	Run, "C:\Program Files\ConEmu\ConEmu64.exe"
+	Run, "%programfiles%\ConEmu\ConEmu64.exe" -run {powershell}
 	return
 
 ; (F7-F12) media key
