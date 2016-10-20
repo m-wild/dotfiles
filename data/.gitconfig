@@ -24,17 +24,14 @@
 	treelog = "log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold cyan)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 	lga = "log --graph --abbrev-commit --decorate --date=relative --format=oneline"
 	lg = "log --graph --abbrev-commit --decorate --date=relative --format=oneline --first-parent HEAD"
-
 	st = status
 	c = commit
+	diffall = "difftool --dir-diff"
 
 [filter "lfs"]
 	smudge = git-lfs smudge %f
 	required = true
 	clean = git-lfs clean %f
-
-[diff]
-	tool = bc3
 
 [difftool]
 	prompt = false
@@ -46,11 +43,9 @@
 	path = c:/program files/Subilme Text 3/subl.exe
 	cmd = subl -n --wait \"$LOCAL\" \"$REMOTE\" --command \"sublimerge_diff_views {\\\"left_read_only\\\": true, \\\"right_read_only\\\": true}\"
 
-[merge]
-	tool = bc3
-
 [mergetool]
 	prompt = false
+	keepBackup = false
 
 [mergetool "bc3"]
 	path = c:/Program Files/Beyond Compare 4/bcomp.exe
