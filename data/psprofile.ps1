@@ -20,6 +20,8 @@ new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$($env:windir)\system32\drivers\etc\hosts" ) }
 function format-json { $args | convertfrom-json | convertto-json }
 new-alias fjson format-json
+function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
+
 
 # editors
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
