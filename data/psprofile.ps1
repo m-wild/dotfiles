@@ -21,7 +21,10 @@ function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$($env
 function format-json { $args | convertfrom-json | convertto-json }
 new-alias fjson format-json
 function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
-
+function add-path {
+    $env:path += ";$args"
+    [Environment]::SetEnvironmentVariable("Path", $env:path + ";$args", [EnvironmentVariableTarget]::Machine)
+}
 
 # editors
 new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
