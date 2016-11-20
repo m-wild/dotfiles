@@ -56,6 +56,9 @@ new-alias tfpt "C:\Program Files (x86)\Microsoft Team Foundation Server 2015 Pow
 new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
 new-alias git-tf "D:\michael.wildman\tools\git-tf\git-tf.cmd"
+function _vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
+function git-vsts { chrome "$(_vstsuri)/" }
+function git-pr { chrome "$(_vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 
 # python
 new-alias py "C:\Windows\py.exe"
