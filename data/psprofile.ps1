@@ -77,6 +77,22 @@ new-alias dig "C:\Program Files\ISC BIND 9\bin\dig.exe"
 new-alias splunk "C:\Program Files\Splunk\bin\Splunk.exe"
 
 
+# vanity
+function get-sysinfo {
+	$os = gwmi Win32_OperatingSystem
+	$proc = gwmi Win32_Processor
+	$sys = gwmi Win32_ComputerSystem
+	$gpu = gwmi Win32_DisplayConfiguration
+
+	$ram = "$([math]::round($sys.totalPhysicalMemory / 1GB))GB"
+
+	write-host $os.caption $os.osarchitecture $os.version
+	write-host $proc.name $ram
+	write-host $gpu.devicename
+}
+
+
+
 # test if the current shell is elevated
 function test-isadmin {
 	return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
