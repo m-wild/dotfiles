@@ -61,9 +61,7 @@ function git-vsts { chrome "$(_vstsuri)/" }
 function git-pr { chrome "$(_vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 
 # python
-new-alias py "C:\Windows\py.exe"
-new-alias python "c:\python\3\python.exe"
-new-alias pip "c:\python\3\Scripts\pip.exe"
+new-alias python "$($env:localappdata)\python\3\python.exe"
 
 # media
 new-alias youtube-dl "C:\Program Files (x86)\youtube-dl\youtube-dl.exe"
