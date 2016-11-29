@@ -15,7 +15,7 @@
         "name": "vim",
         "linkFile": "_vimrc",
         "linkTo": "$env:userprofile\\_vimrc",
-        "enabled": true
+        "enabled": false
     },
     {
         "name": "git",
@@ -27,7 +27,7 @@
 		"name": "vscode",
 		"linkFile": "vscode.json",
 		"linkTo": "$env:appdata\\Code\\User\\settings.json",
-		"enabled": true
+		"enabled": false
 	},
     {
         "name": "ahk",
@@ -39,6 +39,18 @@
         "name": "conemu",
         "linkFile": "ConEmu.xml",
         "linkTo": "$env:appdata\\ConEmu.xml",
+        "enabled": true
+    },
+    {
+        "name": "sublime-preferences",
+        "linkFile": "sublime-preferences.sublime-settings",
+        "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Preferences.sublime-settings",
+        "enabled": true
+    },
+    {
+        "name": "sublime-package-control",
+        "linkFile": "sublime-package-control.sublime-settings",
+        "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Package Control.sublime-settings",
         "enabled": true
     }
 ]
