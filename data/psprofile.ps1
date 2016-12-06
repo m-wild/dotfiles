@@ -36,7 +36,13 @@ new-alias putty "C:\Program Files (x86)\PuTTY\putty.exe"
 new-alias plink "C:\Program Files (x86)\PuTTY\plink.exe"
 new-alias pageant "C:\Program Files (x86)\PuTTY\pageant.exe"
 function ssh { putty $args -new_console }
-function ssh-agent { pageant $global:ssh_private_id }
+function ssh-agent { 
+    # pageant locks the folder that it starts in so start it in systemroot
+    push-location
+    cd $env:systemroot
+    pageant $global:ssh_private_id 
+    pop-location
+}
 function ssh-copy-id {
 	$cred = get-credential
 	get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
