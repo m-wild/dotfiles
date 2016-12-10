@@ -37,14 +37,14 @@ process
 
     $config = get-content -path (join-path $path "dotfiles.json") -raw | convertfrom-json
 
-    foreach ($dotfile in $config | where enabled) {
+    # --- 1. symlinks
+    foreach ($dotfile in $config.symlink | where enabled) {
         write-host ""
         write-host ">> $($dotfile.name)"
 
         $dotfile.linkFile = Join-Path $path $dotfile.linkFile
-        $dotfile.linkFile = [System.Environment]::ExpandEnvironmentVariables($dotfile.linkFile)
-        $dotfile.linkFile = $ExecutionContext.InvokeCommand.ExpandString($dotfile.linkFile)
-      
+
+        # expand linkTo variables
         $dotfile.linkTo = [System.Environment]::ExpandEnvironmentVariables($dotfile.linkTo)
         $dotfile.linkTo = $ExecutionContext.InvokeCommand.ExpandString($dotfile.linkTo)
     
@@ -66,4 +66,28 @@ process
             new-symlink -Target $dotfile.linkFile -Link $dotfile.linkTo
         }
     }
+
+    # --- 2. registry keys
+    foreach ($reg in $config.reg | where enabled) {
+        write-host ""
+        write-host ">> $($reg.name)"
+
+        $reg.importPath = Join-Path $path $reg.importPath
+
+        # remove existing reg keys
+        if ($action -eq "clean") {
+            if (!(test-path $reg.cleanPath)) {
+                write-host "$($reg.cleanPath) already clean"
+            } else {
+                write-host "removing registry keys $($reg.cleanPath)"
+                remove-item -Recurse -Path $reg.cleanPath
+            }
+        }
+        # import reg file
+        elseif ($action -eq "build") {
+            write-host "importing reg $($reg.importPath)... " -nonewline
+            & reg import $reg.importPath
+        }
+    }
+
 }

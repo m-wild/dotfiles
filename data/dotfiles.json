@@ -1,4 +1,4 @@
-[
+{"symlink": [
     {
         "name": "powershell",
         "linkFile": "psprofile.ps1",
@@ -23,12 +23,12 @@
         "linkTo": "$env:userprofile\\.gitconfig",
         "enabled": true
     },
-	{
-		"name": "vscode",
-		"linkFile": "vscode.json",
-		"linkTo": "$env:appdata\\Code\\User\\settings.json",
-		"enabled": false
-	},
+    {
+        "name": "vscode",
+        "linkFile": "vscode.json",
+        "linkTo": "$env:appdata\\Code\\User\\settings.json",
+        "enabled": false
+    },
     {
         "name": "ahk",
         "linkFile": "mwil.ahk",
@@ -53,4 +53,12 @@
         "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Package Control.sublime-settings",
         "enabled": true
     }
-]
+],
+"reg": [
+    {
+        "name": "putty",
+        "importPath": "putty-settings.reg",
+        "cleanPath": "HKCU://software/SimonTatham/PuTTY/Sessions",
+        "enabled": true
+    }
+]}
