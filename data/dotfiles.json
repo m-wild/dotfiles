@@ -9,7 +9,7 @@
         "name": "ssh",
         "linkFile": "sshconfig",
         "linkTo": "$env:userprofile\\.ssh\\config",
-        "enabled": true
+        "enabled": false
     },
     {
         "name": "vim",
@@ -27,7 +27,7 @@
         "name": "vscode",
         "linkFile": "vscode.json",
         "linkTo": "$env:appdata\\Code\\User\\settings.json",
-        "enabled": false
+        "enabled": true
     },
     {
         "name": "ahk",
@@ -45,13 +45,13 @@
         "name": "sublime-preferences",
         "linkFile": "sublime-preferences.sublime-settings",
         "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Preferences.sublime-settings",
-        "enabled": true
+        "enabled": false
     },
     {
         "name": "sublime-package-control",
         "linkFile": "sublime-package-control.sublime-settings",
         "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Package Control.sublime-settings",
-        "enabled": true
+        "enabled": false
     }
 ],
 "reg": [
