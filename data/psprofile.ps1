@@ -10,7 +10,6 @@ $global:log_home = join-path $env:user_home ".logs"
 # util
 new-alias open start
 new-alias grep Select-String
-new-alias gch Get-ChildItem
 new-alias touch New-Item
 function ll ($params)  { ls -Force $params }
 function reset-color { [Console]::ResetColor() }
@@ -19,7 +18,6 @@ function tail ([switch]$f,$file) {  if ($f) { Get-Content $file -Tail 10 -Wait }
 new-alias ps-admin "d:\michael.wildman\tools\powershell-michaelw-admin.lnk"
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$($env:windir)\system32\drivers\etc\hosts" ) }
 function format-json { $args | convertfrom-json | convertto-json }
-new-alias fjson format-json
 function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
 function add-path {
     $env:path += ";$args"
@@ -27,8 +25,7 @@ function add-path {
 }
 
 # editors
-new-alias npp "C:\Program Files (x86)\Notepad++\notepad++.exe"
-new-alias vi subl
+new-alias vi code
 new-alias bcomp "$($env:programfiles)\beyond compare 4\bcomp.exe"
 
 # ssh
@@ -57,8 +54,6 @@ function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # code/build
 new-alias nuget "D:\michael.wildman\tools\NuGet\nuget.exe"
-new-alias tf "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\TF.exe"
-new-alias tfpt "C:\Program Files (x86)\Microsoft Team Foundation Server 2015 Power Tools\TFPT.exe"
 new-alias msbuild-v140 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
 new-alias git-tf "D:\michael.wildman\tools\git-tf\git-tf.cmd"
