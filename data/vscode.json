@@ -1,8 +1,24 @@
 {
-	"editor.fontSize": 12,
-	"terminal.external.windowsExec": "powershell",
-	"terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
-	"files.associations": {
-		"*.conf": "ini"
-	}
+    "editor.fontSize": 12,
+    "terminal.external.windowsExec": "powershell",
+    "terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "files.associations": {
+        "*.conf": "ini"
+    },
+    "mssql.connections": [
+        {
+            "server": "(localdb)\\mssqllocaldb",
+            "database": "cashmoney",
+            "authenticationType": "Integrated",
+            "profileName": "cashmoney@localdb",
+            "password": ""
+        },
+        {
+            "server": "(localdb)\\mssqllocaldb",
+            "database": "sandpit",
+            "authenticationType": "Integrated",
+            "profileName": "sandpit@localdb",
+            "password": ""
+        }
+    ]
 }
