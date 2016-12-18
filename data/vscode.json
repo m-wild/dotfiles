@@ -20,5 +20,6 @@
             "profileName": "sandpit@localdb",
             "password": ""
         }
-    ]
+    ],
+    "git.confirmSync": false
 }
