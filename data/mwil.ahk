@@ -1,9 +1,6 @@
 ; mwil.ahk
 ; michael@mwild.me
 
-; Session options
-SetTitleMatchMode, 2
-
 ; minimize (instead of restore)
 #Down::WinMinimize, A
 
@@ -42,18 +39,5 @@ Vk81::SendInput {Insert}
 ^Vk81::SendInput ^{Insert}
 ^!Vk81::SendInput ^!{Insert}
 
-; (F19) Cycle default audio playback device
-Vk82::
-	Run, mmsys.cpl
-	WinWait, Sound
-	ControlSend, SysListView321, {Down}
-	ControlGet, isEnabled, Enabled, , &Set Default
-	if(!isEnabled)
-	{
-	  ControlSend, SysListView321, {Down 2}
-	}
-	ControlClick, &Set Default
-	ControlClick, OK
-	WinWaitClose
-	SoundPlay, *-1
-	return
+; (F19) nothing...
+; Vk82::

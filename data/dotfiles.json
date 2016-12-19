@@ -6,27 +6,21 @@
         "enabled": true
     },
     {
-        "name": "ssh",
-        "linkFile": "sshconfig",
-        "linkTo": "$env:userprofile\\.ssh\\config",
-        "enabled": false
-    },
-    {
-        "name": "vim",
-        "linkFile": "_vimrc",
-        "linkTo": "$env:userprofile\\_vimrc",
-        "enabled": false
-    },
-    {
         "name": "git",
         "linkFile": ".gitconfig",
         "linkTo": "$env:userprofile\\.gitconfig",
         "enabled": true
     },
     {
-        "name": "vscode",
-        "linkFile": "vscode.json",
+        "name": "vscode-settings",
+        "linkFile": "vs-code\\settings.json",
         "linkTo": "$env:appdata\\Code\\User\\settings.json",
+        "enabled": true
+    },
+    {
+        "name": "vscode-snippets",
+        "linkFile": "vs-code\\snippets",
+        "linkTo": "$env:appdata\\Code\\User\\snippets",
         "enabled": true
     },
     {
@@ -43,13 +37,13 @@
     },
     {
         "name": "sublime-preferences",
-        "linkFile": "sublime-preferences.sublime-settings",
+        "linkFile": "sublime-text\\preferences.sublime-settings",
         "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Preferences.sublime-settings",
         "enabled": false
     },
     {
         "name": "sublime-package-control",
-        "linkFile": "sublime-package-control.sublime-settings",
+        "linkFile": "sublime-text\\package-control.sublime-settings",
         "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Package Control.sublime-settings",
         "enabled": false
     }
