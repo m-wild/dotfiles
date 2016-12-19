@@ -34,18 +34,6 @@
         "linkFile": "ConEmu.xml",
         "linkTo": "$env:appdata\\ConEmu.xml",
         "enabled": true
-    },
-    {
-        "name": "sublime-preferences",
-        "linkFile": "sublime-text\\preferences.sublime-settings",
-        "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Preferences.sublime-settings",
-        "enabled": false
-    },
-    {
-        "name": "sublime-package-control",
-        "linkFile": "sublime-text\\package-control.sublime-settings",
-        "linkTo": "$env:appdata\\Sublime Text 3\\Packages\\User\\Package Control.sublime-settings",
-        "enabled": false
     }
 ],
 "reg": [
