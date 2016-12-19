@@ -1,2 +1,3 @@
 * 					text=auto
 *.sublime-settings	text eol=lf
+*.reg               text

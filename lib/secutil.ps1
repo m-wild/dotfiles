@@ -1,4 +1,4 @@
-﻿## secutil.psm1
+## secutil.psm1
 ## security related utilites
 ## michael@mwild.me
 

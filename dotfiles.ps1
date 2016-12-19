@@ -1,4 +1,4 @@
-﻿## dotfiles.ps1
+## dotfiles.ps1
 ## michael@mwild.me
 
 [CmdletBinding()]
