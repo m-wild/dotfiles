@@ -1,5 +1,4 @@
 {
-    "editor.fontSize": 12,
     "terminal.external.windowsExec": "powershell",
     "terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
     "files.associations": {
@@ -21,5 +20,6 @@
             "password": ""
         }
     ],
-    "git.confirmSync": false
+    "git.confirmSync": false,
+    "window.zoomLevel": -0.95
 }
