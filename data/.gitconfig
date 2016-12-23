@@ -1,59 +1,32 @@
-# http://ben-denham.github.io/git-advanced/
 [user]
 	name = Michael Wildman
 	# user.email comes from $env:EMAIL
-
 [core]
 	autocrlf = true
 	eol = crlf
-	#editor = 'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
-	editor = 'c:/program files/sublime text 3/subl.exe' -n --wait
-
+	editor = 'c:/program files (x86)/microsoft vs code/code.exe' --new-window --wait
 [push]
 	default = current
-
 [pull]
 	rebase = true
-
 [color]
 	ui = always
-
 [log]
 	decorate = full
-
 [alias]
 	treelog = "log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold cyan)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 	lga = "log --graph --abbrev-commit --decorate --date=relative --format=oneline"
 	lg = "log --graph --abbrev-commit --decorate --date=relative --format=oneline --first-parent HEAD"
 	st = status
-	c = commit
-	diffall = "difftool --tool=bc3 --dir-diff"
-
+	co = commit
 [filter "lfs"]
 	smudge = git-lfs smudge %f
 	required = true
 	clean = git-lfs clean %f
-
+[diff]
+	tool = vscode
 [difftool]
 	prompt = false
-
-[difftool "bc3"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe
-
-[difftool "sublimerge"]
-	path = c:/program files/Subilme Text 3/subl.exe
-	cmd = subl -n --wait \"$LOCAL\" \"$REMOTE\" --command \"sublimerge_diff_views {\\\"left_read_only\\\": true, \\\"right_read_only\\\": true}\"
-
-[mergetool]
-	prompt = false
-	keepBackup = false
-
-[mergetool "bc3"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe
-
-[mergetool "sublimerge"]
-	path = c:/program files/Subilme Text 3/subl.exe
-	cmd = subl -n --wait \"$REMOTE\" \"$BASE\" \"$LOCAL\" \"$MERGED\" --command \"sublimerge_diff_views\"
-	trustExitCode = false
-
-
+[difftool "vscode"]
+	path = c:/program files (x86)/microsoft vs code/code.exe
+	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
