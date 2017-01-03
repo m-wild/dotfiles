@@ -3,7 +3,6 @@
 	# user.email comes from $env:EMAIL
 [core]
 	autocrlf = true
-	eol = crlf
 	editor = 'c:/program files (x86)/microsoft vs code/code.exe' --new-window --wait
 [push]
 	default = current
