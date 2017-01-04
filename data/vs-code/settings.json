@@ -20,6 +20,10 @@
             "password": ""
         }
     ],
+    "mssql.resultsFontSize": 14,
+    "mssql.resultsFontFamily": "Arial",
     "git.confirmSync": false,
-    "window.zoomLevel": -0.95
+    "window.zoomLevel": -0.4,
+    "editor.fontSize": 13,
+    "workbench.editor.showIcons": false
 }
