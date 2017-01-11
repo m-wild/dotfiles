@@ -55,9 +55,11 @@ process {
             $dotfile.target = Join-Path $path $dotfile.target
             
             # we have to tell mklink if the target is a directory
-            if (Test-IsDirectory $dotfile.target) { $mkLinkArg = "/D" }
-
-            cmd.exe /c mklink $mkLinkArg $dotfile.link $dotfile.target
+            if (Test-IsDirectory $dotfile.target) { 
+                cmd.exe /c mklink /d $dotfile.link $dotfile.target
+            } else {
+                cmd.exe /c mklink $dotfile.link $dotfile.target
+            }
         }
     }
 
