@@ -1,38 +1,38 @@
 {"symlink": [
     {
         "name": "powershell",
-        "linkFile": "psprofile.ps1",
-        "linkTo": "$env:userprofile\\Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1",
+        "target": "psprofile.ps1",
+        "link": "$env:userprofile\\Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1",
         "enabled": true
     },
     {
         "name": "git",
-        "linkFile": ".gitconfig",
-        "linkTo": "$env:userprofile\\.gitconfig",
+        "target": ".gitconfig",
+        "link": "$env:userprofile\\.gitconfig",
         "enabled": true
     },
     {
         "name": "vscode-settings",
-        "linkFile": "vs-code\\settings.json",
-        "linkTo": "$env:appdata\\Code\\User\\settings.json",
+        "target": "vs-code\\settings.json",
+        "link": "$env:appdata\\Code\\User\\settings.json",
         "enabled": true
     },
     {
         "name": "vscode-snippets",
-        "linkFile": "vs-code\\snippets",
-        "linkTo": "$env:appdata\\Code\\User\\snippets",
+        "target": "vs-code\\snippets",
+        "link": "$env:appdata\\Code\\User\\snippets",
         "enabled": true
     },
     {
         "name": "ahk",
-        "linkFile": "mwil.ahk",
-        "linkTo": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
+        "target": "mwil.ahk",
+        "link": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
         "enabled": true
     },
     {
         "name": "conemu",
-        "linkFile": "ConEmu.xml",
-        "linkTo": "$env:appdata\\ConEmu.xml",
+        "target": "ConEmu.xml",
+        "link": "$env:appdata\\ConEmu.xml",
         "enabled": true
     }
 ],

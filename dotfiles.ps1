@@ -2,24 +2,18 @@
 ## michael@mwild.me
 
 [CmdletBinding()]
-#Requires -Version 3
 param(
-	[string]$action,
-	[string]$path,
-    [switch]$help
+    [string][validateset("build","clean")] $action,
+	[string] $path,
+    [switch] $help
 )
-process 
-{
+process {
     $ErrorActionPreference = "stop"
 
-    # includes
-    . "$PSScriptRoot\lib\secutil.ps1"
-    . "$PSScriptRoot\lib\symlink.ps1"
+    function Test-IsDirectory ($Path) { return (Get-Item -Path $Path).PSIsContainer }
 
     write-host "-.. --- - ..-. .. .-.. . ..." -foregroundColor cyan # dotfiles morse code
-    
-    # usage information
-    if (($Help) -or !($action -in "build", "clean")) {
+    if (($Help) -or !($action)) {
         write-host "creates symlinks for your dotfiles"
         write-host "usage: dotfiles [-action] <action> [-path <path_to_data_directory>]"
         write-host ""
@@ -29,52 +23,49 @@ process
         return
     }
 
-    # we need to be admin for mklink to work
-    if (($action -eq "build") -and !(test-isAdmin)) { throw "build requires elevated privileges" }
-
-    # use the default path if not provided
     if (!$path) { $path = (join-path $PSScriptRoot "data") }
 
     $config = get-content -path (join-path $path "dotfiles.json") -raw | convertfrom-json
 
     # --- 1. symlinks
     foreach ($dotfile in $config.symlink | where enabled) {
-        write-host ""
-        write-host ">> $($dotfile.name)"
+        write-host "`n>> $($dotfile.name)"
 
-        $dotfile.linkFile = Join-Path $path $dotfile.linkFile
-
-        # expand linkTo variables
-        $dotfile.linkTo = [System.Environment]::ExpandEnvironmentVariables($dotfile.linkTo)
-        $dotfile.linkTo = $ExecutionContext.InvokeCommand.ExpandString($dotfile.linkTo)
+        $dotfile.link = [System.Environment]::ExpandEnvironmentVariables($dotfile.link)
+        $dotfile.link = $ExecutionContext.InvokeCommand.ExpandString($dotfile.link)
     
-        # remove existing
         if ($action -eq "clean") {
-            if (!(test-path $dotfile.linkTo)) {
-                write-host "$($dotfile.linkTo) already clean"
+            if (!(test-path $dotfile.link)) {
+                write-host "$($dotfile.link) already clean"
             } else {
-                write-host "removing link $($dotfile.linkTo)"
-                remove-item -Path $dotfile.linkTo
+                write-host "removing link $($dotfile.link)"
+
+                # this is a quirk of trying to delete directory symlinks in powershell
+                if (Test-IsDirectory $dotfile.link) {
+                    cmd.exe /c rmdir $dotfile.link
+                } else {
+                    remove-item -Path $dotfile.link
+                }
             }
         } 
-        # create symlinks
         elseif ($action -eq "build") {
-            # create the link directory structure if it doesn't already exist
-            $dotfile_linkToDir = split-path $dotfile.linkTo
-            if (-not (test-path $dotfile_linkToDir)) { mkdir $dotfile_linkToDir > $null }
+            $dotfile_linkDir = split-path $dotfile.link
+            if (-not (test-path $dotfile_linkDir)) { mkdir $dotfile_linkDir | out-null }
+
+            $dotfile.target = Join-Path $path $dotfile.target
             
-            new-symlink -Target $dotfile.linkFile -Link $dotfile.linkTo
+            # we have to tell mklink if the target is a directory
+            if (Test-IsDirectory $dotfile.target) { $mkLinkArg = "/D" }
+
+            cmd.exe /c mklink $mkLinkArg $dotfile.link $dotfile.target
         }
     }
 
     # --- 2. registry keys
     foreach ($reg in $config.reg | where enabled) {
-        write-host ""
-        write-host ">> $($reg.name)"
+        write-host "`n>> $($reg.name)"
 
-        $reg.importPath = Join-Path $path $reg.importPath
 
-        # remove existing reg keys
         if ($action -eq "clean") {
             if (!(test-path $reg.cleanPath)) {
                 write-host "$($reg.cleanPath) already clean"
@@ -83,10 +74,11 @@ process
                 remove-item -Recurse -Path $reg.cleanPath
             }
         }
-        # import reg file
         elseif ($action -eq "build") {
+            $reg.importPath = Join-Path $path $reg.importPath
+            
             write-host "importing reg $($reg.importPath)... " -nonewline
-            & reg import $reg.importPath
+            reg.exe import $reg.importPath
         }
     }
 
