@@ -13,8 +13,9 @@ new-alias grep Select-String
 new-alias touch New-Item
 function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
-function tail ([switch]$f,$path) {  if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
+function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
+function mklink { cmd.exe /c mklink $args }
 
 # widows stuff
 function reset-color { [Console]::ResetColor() }
