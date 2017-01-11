@@ -4,7 +4,9 @@
 $global:ssh_public_id  = join-path $env:ssh_key_directory "id_rsa.pub"
 $global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_path       = join-path $env:user_home ".logs"
-$global:tools_path     = join-path $env:user_home "..\bin"  # this is fine for now
+$global:tools_path     = join-path $env:user_home "..\bin\tools"  # this is fine for now
+
+new-alias dotfiles "$global:tools_path\dotfiles\dotfiles.ps1"
 
 # linux sugar
 new-alias vi code
@@ -15,9 +17,9 @@ function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
-function mklink { cmd.exe /c mklink $args }
 
 # widows stuff
+function mklink { cmd.exe /c mklink $args }
 function reset-color { [Console]::ResetColor() }
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$env:windir\system32\drivers\etc\hosts" ) }
 function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
