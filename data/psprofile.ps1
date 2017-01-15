@@ -4,9 +4,8 @@
 $global:ssh_public_id  = join-path $env:ssh_key_directory "id_rsa.pub"
 $global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_path       = join-path $env:user_home ".logs"
-$global:tools_path     = join-path $env:user_home "..\bin\tools"  # this is fine for now
 
-new-alias dotfiles "$global:tools_path\dotfiles\dotfiles.ps1"
+new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1"
 
 # linux sugar
 new-alias vi code
@@ -50,8 +49,8 @@ new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe"
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # code/build
-new-alias nuget "$global:tools_path\NuGet\nuget.exe"
-new-alias git-tf "$global:tools_path\git-tf\git-tf.cmd"
+new-alias nuget "$env:user_tools_path\NuGet\nuget.exe"
+new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd"
 new-alias msbuild-v140 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
