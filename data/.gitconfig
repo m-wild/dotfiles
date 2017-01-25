@@ -22,8 +22,6 @@
 	smudge = git-lfs smudge %f
 	required = true
 	clean = git-lfs clean %f
-[diff]
-	tool = vscode
 [difftool]
 	prompt = false
 [difftool "vscode"]
