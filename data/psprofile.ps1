@@ -49,7 +49,6 @@ new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe"
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # code/build
-new-alias nuget "$env:user_tools_path\NuGet\nuget.exe"
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd"
 new-alias msbuild-v140 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild msbuild-v140
