@@ -8,7 +8,8 @@ $global:log_path       = join-path $env:user_home ".logs"
 new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1"
 
 # linux sugar
-new-alias vi code
+new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe"
+new-alias vi npp
 new-alias open start
 new-alias grep Select-String
 new-alias touch New-Item
@@ -55,6 +56,8 @@ new-alias msbuild msbuild-v140
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
 function open-vsts { chrome "$(__vstsuri)/" }
 function new-pullreq { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+new-alias autorest "$env:user_tools_path\autorest\autorest.exe"
+
 
 # vanity
 function get-sysinfo {

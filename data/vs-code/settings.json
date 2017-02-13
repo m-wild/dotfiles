@@ -25,5 +25,7 @@
     "git.confirmSync": false,
     "window.zoomLevel": -0.4,
     "editor.fontSize": 13,
-    "workbench.editor.showIcons": false
+    "workbench.editor.showIcons": false,
+    "window.menuBarVisibility": "toggle",
+    "editor.wordWrap": true
 }
