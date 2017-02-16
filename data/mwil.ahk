@@ -7,6 +7,8 @@
 ; shell
 ^!PgDn::
 	Run, "%programfiles%\ConEmu\ConEmu64.exe" -run {powershell}
+	Sleep, 500
+	WinActivate, ahk_exe conemu64.exe
 	return
 
 ; (F7-F12) media key
