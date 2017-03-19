@@ -29,5 +29,8 @@
     "editor.wordWrap": true,
     "window.menuBarVisibility": "toggle",
     "workbench.welcome.enabled": false,
-    "editor.renderWhitespace": "none"
+    "editor.renderWhitespace": "none",
+    "workbench.colorTheme": "Atom One Dark",
+    "workbench.iconTheme": "vs-seti",
+    "editor.minimap.enabled": true
 }
