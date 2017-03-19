@@ -17,6 +17,7 @@ function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
+function mkdircd { mkdir $args[0]; cd $args[0];}
 
 # widows stuff
 function mklink { cmd.exe /c mklink $args }
@@ -41,6 +42,9 @@ function ssh-copy-id {
     $cred = get-credential
     get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
+function copy-sshpublickey {
+    get-content $global:ssh_public_id | clip
+}
 new-alias winscp "${env:programfiles(x86)}\WinSCP\winscp.exe"
 new-alias openssl "$env:programfiles\openssl\bin\openssl.exe"
 
@@ -51,11 +55,12 @@ function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 # code/build
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd"
-new-alias msbuild-v140 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
-new-alias msbuild msbuild-v140
+new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+new-alias msbuild msbuild15
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
 function open-vsts { chrome "$(__vstsuri)/" }
-function new-pullreq { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 new-alias autorest "$env:user_tools_path\autorest\autorest.exe"
 
 
