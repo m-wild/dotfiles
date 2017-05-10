@@ -17,7 +17,7 @@ function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
-function mkdircd { mkdir $args[0]; cd $args[0];}
+function mkdircd { mkdir $args[0]; cd $args[0]; }
 
 # widows stuff
 function mklink { cmd.exe /c mklink $args }
@@ -30,7 +30,7 @@ function add-path {
 }
 function format-json { $args | convertfrom-json | convertto-json }
 
-# ssh/scp/ssl
+# ssh/scp/ssl/rdp
 function ssh { putty $args -new_console }  # note: -new_console is for conemu
 function ssh-agent {
     push-location
@@ -45,8 +45,8 @@ function ssh-copy-id {
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
 }
-new-alias winscp "${env:programfiles(x86)}\WinSCP\winscp.exe"
-new-alias openssl "$env:programfiles\openssl\bin\openssl.exe"
+new-alias openssl "${env:programfiles(x86)}\openssl\bin\openssl.exe"
+function rdp { mstsc /v:"$args.callplus.co.nz" }
 
 # web
 new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe"
@@ -61,8 +61,21 @@ new-alias msbuild msbuild15
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
 function open-vsts { chrome "$(__vstsuri)/" }
 function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
-new-alias autorest "$env:user_tools_path\autorest\autorest.exe"
-
+function new-restclient
+    ( [Parameter(Mandatory=$true)][string]$namespace, [Parameter(Mandatory=$true)][string]$swaggerPath )
+    { autorest -CodeGenerator CSharp -Modeler Swagger -Namespace "$namespace" -Input "$swaggerPath" }
+function open-solution { open(gci -filter *.sln) }
+function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
+function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
+function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
+function get-logs ($app) { get-content -tail 0 -wait -path "$env:app_logs\$app\$app.log" | %{convertfrom-json $_} }
+function _writelogformatted ($log, $color) { write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.logmessage $log.exception -ForegroundColor $color }
+function get-logsformatted { 
+    get-logs $args[0] | select timestamp,severity,logmessage,exception | %{
+        if ($_.severity -in "error","fatal") { _writelogformatted $_ "red" }
+        elseif ($_.severity -eq "warn") { _writelogformatted $_ "yellow" }
+        else { _writelogformatted $_ "gray"}}
+}
 
 # vanity
 function get-sysinfo {
