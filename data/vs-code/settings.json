@@ -30,7 +30,8 @@
     "window.menuBarVisibility": "toggle",
     "workbench.welcome.enabled": false,
     "editor.renderWhitespace": "none",
-    "workbench.colorTheme": "Atom One Dark",
+    "workbench.colorTheme": "One Dark Pro",
     "workbench.iconTheme": "vs-seti",
-    "editor.minimap.enabled": true
+    "editor.minimap.enabled": true,
+    "auto-close-tag.activationOnLanguage": ["html","xml"]
 }
