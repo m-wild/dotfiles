@@ -29,9 +29,13 @@
     "editor.wordWrap": true,
     "window.menuBarVisibility": "toggle",
     "workbench.welcome.enabled": false,
-    "editor.renderWhitespace": "none",
+    "editor.renderWhitespace": "all",
     "workbench.colorTheme": "One Dark Pro",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": true,
-    "auto-close-tag.activationOnLanguage": ["html","xml"]
+    "auto-close-tag.activationOnLanguage": [
+        "html",
+        "xml"
+    ],
+    "git.enableSmartCommit": true
 }
