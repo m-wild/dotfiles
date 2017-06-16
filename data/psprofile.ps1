@@ -7,7 +7,9 @@ $global:log_path       = join-path $env:user_home ".logs"
 
 new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1"
 
-# linux sugar
+##
+## linux sugar
+##
 new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe"
 new-alias vi npp
 new-alias open start
@@ -19,7 +21,9 @@ function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -W
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
 function mkdircd { mkdir $args[0]; cd $args[0]; }
 
-# widows stuff
+##
+## widows stuff
+##
 function mklink { cmd.exe /c mklink $args }
 function reset-color { [Console]::ResetColor() }
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$env:windir\system32\drivers\etc\hosts" ) }
@@ -30,7 +34,9 @@ function add-path {
 }
 function format-json { $args | convertfrom-json | convertto-json }
 
-# ssh/scp/ssl/rdp
+##
+## ssh/scp/ssl/rdp
+##
 function ssh { putty $args -new_console }  # note: -new_console is for conemu
 function ssh-agent {
     push-location
@@ -48,12 +54,16 @@ function copy-sshpublickey {
 new-alias openssl "${env:programfiles(x86)}\openssl\bin\openssl.exe"
 function rdp { mstsc /v:"$args.callplus.co.nz" }
 
-# web
+##
+## web
+##
 new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe"
 new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe"
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
-# code/build
+##
+## code/build
+##
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd"
 new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
 new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
@@ -64,20 +74,64 @@ function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(gi
 function new-restclient
     ( [Parameter(Mandatory=$true)][string]$namespace, [Parameter(Mandatory=$true)][string]$swaggerPath )
     { autorest -CodeGenerator CSharp -Modeler Swagger -Namespace "$namespace" -Input "$swaggerPath" }
-function open-solution { open(gci -filter *.sln) }
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
 function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
-function get-logs ($app) { get-content -tail 0 -wait -path "$env:app_logs\$app\$app.log" | %{convertfrom-json $_} }
-function _writelogformatted ($log, $color) { write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.logmessage $log.exception -ForegroundColor $color }
-function get-logsformatted { 
-    get-logs $args[0] | select timestamp,severity,logmessage,exception | %{
-        if ($_.severity -in "error","fatal") { _writelogformatted $_ "red" }
-        elseif ($_.severity -eq "warn") { _writelogformatted $_ "yellow" }
-        else { _writelogformatted $_ "gray"}}
+function rider {
+    $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
+    $rider_version = ls $rider_path | where mode -like 'd*' | sort | select -last 1
+    start-process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $args )
+}
+function open-solution ([switch]$rider) {
+    $sln = (gci -filter *.sln | select -first 1).Name
+    write-host "Opening solution $sln"
+    if ($rider) {
+        rider $sln
+    } else {
+        open $sln
+    }
 }
 
-# vanity
+##
+## Logging
+##
+function get-logs ([string] $app, [switch]$formatted, [switch]$this) {
+    if ($this) {
+        $app = (split-path (pwd) -leaf)
+    }
+    
+    if ($formatted) {
+        _getlogformatted -app $app
+    } else {
+        _getlogjson -app $app
+    }
+}
+function _getlogjson ($app) {
+    get-content -tail 0 -wait -path "$env:app_logs\$app\$app.log" | %{convertfrom-json $_} 
+}
+function _writelogformatted ($log, $color) { 
+    write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.message $log.exception -ForegroundColor $color 
+}
+function _getlogformatted ($app) { 
+    _getlogjson $app | select timestamp,severity,message,exception | %{
+        if ($_.severity -in "error","fatal") {
+            _writelogformatted $_ "red"
+        } elseif ($_.severity -eq "warn") {
+            _writelogformatted $_ "yellow"
+        } elseif ($_.severity -in "trace","debug") {
+            _writelogformatted $_ "darkgray"
+        } else {
+            _writelogformatted $_ "gray"
+        }
+    }
+}
+
+
+
+
+##
+## vanity
+##
 function get-sysinfo {
     $os   = Get-WmiObject Win32_OperatingSystem
     $proc = Get-WmiObject Win32_Processor
@@ -104,6 +158,7 @@ Set-Variable HOME $env:user_home -Force  			 # Set and force overwrite of the $H
 $global:prompt_prev_dir = Get-Location
 $global:prompt_prev_hist_id = 0
 $global:prompt_log_file = Join-Path $global:log_path "\shell-history-$(get-date -f 'yyyy-MM').log"
+
 function prompt {
     $hist = Get-History -Count 1
     if ($hist.Id -gt $global:prompt_prev_hist_id) {  # log new entries only
@@ -114,16 +169,25 @@ function prompt {
     $cd = Get-Location
     $global:prompt_prev_path = $cd
 
+    write-host "[$(split-path $cd -leaf)]" -NoNewLine
+
+    # $branch = git rev-parse --abbrev-ref HEAD 2>$null
+    # if ($branch -ne $null) {
+    #     Write-Host " ($branch)" -ForegroundColor blue -NoNewline
+    # }
+
     # pretty print prompt
     if (test-isadmin) {
         $host.UI.RawUI.WindowTitle = "[Admin] $cd"
-        write-host "[$(split-path $cd -leaf)]" -NoNewLine
-        write-host "#" -NoNewLine -ForegroundColor red  # supposed to return it, but then we cant get ~color~
-        return " "
+        write-host "#" -NoNewLine -ForegroundColor red  
     } else {
         $host.UI.RawUI.WindowTitle = "$cd"
-        return "[$(split-path $cd -leaf)]$ "
+        write-host "$" -NoNewline
     }
+
+
+
+    return " " # supposed to return the prompt string, but then we cant get ~color~
 }
 
 if (test-isadmin) { Set-Location ~ }  # we need to do this manually..
