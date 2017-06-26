@@ -26,16 +26,18 @@
     "window.zoomLevel": -0.4,
     "editor.fontSize": 13,
     "workbench.editor.showIcons": false,
-    "editor.wordWrap": true,
+    "editor.wordWrap": "on",
     "window.menuBarVisibility": "toggle",
     "workbench.welcome.enabled": false,
     "editor.renderWhitespace": "all",
-    "workbench.colorTheme": "One Dark Pro",
+    "workbench.colorTheme": "Ocean Dark Extended",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": true,
     "auto-close-tag.activationOnLanguage": [
         "html",
         "xml"
     ],
-    "git.enableSmartCommit": true
+    "git.enableSmartCommit": true,
+    "editor.codeLens": false,
+    "window.reopenFolders": "none"
 }
