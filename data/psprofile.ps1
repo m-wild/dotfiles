@@ -5,21 +5,22 @@ $global:ssh_public_id  = join-path $env:ssh_key_directory "id_rsa.pub"
 $global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_path       = join-path $env:user_home ".logs"
 
-new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1"
+new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -force
 
 ##
 ## linux sugar
 ##
-new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe"
-new-alias vi npp
-new-alias open start
-new-alias grep Select-String
-new-alias touch New-Item
+new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe" -force
+new-alias vi npp -force
+new-alias open start -force
+new-alias grep Select-String -force
+new-alias touch New-Item -force
 function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
-new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe"  # dont wan't every BIND tool in PATH.. just dig
+new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't every BIND tool in PATH.. just dig
 function mkdircd { mkdir $args[0]; cd $args[0]; }
+Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
 ##
 ## widows stuff
@@ -51,23 +52,23 @@ function ssh-copy-id {
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
 }
-new-alias openssl "${env:programfiles(x86)}\openssl\bin\openssl.exe"
+new-alias openssl "${env:programfiles(x86)}\openssl\bin\openssl.exe" -force
 function rdp { mstsc /v:"$args.callplus.co.nz" }
 
 ##
 ## web
 ##
-new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe"
-new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe"
+new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe" -force
+new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe" -force
 function google { chrome "https://www.google.co.nz/search?q=$args" }
 
 ##
 ## code/build
 ##
-new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd"
-new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
-new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
-new-alias msbuild msbuild15
+new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
+new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe" -force
+new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" -force
+new-alias msbuild msbuild15 -force
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
 function open-vsts { chrome "$(__vstsuri)/" }
 function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
