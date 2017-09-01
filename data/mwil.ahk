@@ -6,7 +6,7 @@
 
 ; shell
 ^!PgDn::
-	Run, "%programfiles%\ConEmu\ConEmu64.exe" -run {powershell}
+	Run, "%localappdata%\ConEmu\ConEmu64.exe" -run {powershell}
 	Sleep, 500
 	WinActivate, ahk_exe conemu64.exe
 	return
