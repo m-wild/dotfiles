@@ -4,40 +4,18 @@
     "files.associations": {
         "*.conf": "ini"
     },
-    "mssql.connections": [
-        {
-            "server": "(localdb)\\mssqllocaldb",
-            "database": "cashmoney",
-            "authenticationType": "Integrated",
-            "profileName": "cashmoney@localdb",
-            "password": ""
-        },
-        {
-            "server": "(localdb)\\mssqllocaldb",
-            "database": "sandpit",
-            "authenticationType": "Integrated",
-            "profileName": "sandpit@localdb",
-            "password": ""
-        }
-    ],
-    "mssql.resultsFontSize": 14,
-    "mssql.resultsFontFamily": "Arial",
     "git.confirmSync": false,
-    "window.zoomLevel": -0.4,
+    "window.zoomLevel": -0.5,
     "editor.fontSize": 13,
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
     "window.menuBarVisibility": "toggle",
-    "workbench.welcome.enabled": false,
     "editor.renderWhitespace": "all",
-    "workbench.colorTheme": "Ocean Dark Extended",
+    "workbench.colorTheme": "NetBeans Light Theme",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": true,
-    "auto-close-tag.activationOnLanguage": [
-        "html",
-        "xml"
-    ],
     "git.enableSmartCommit": true,
     "editor.codeLens": false,
-    "window.reopenFolders": "none"
+    "window.restoreWindows": "none",
+    "workbench.startupEditor": "newUntitledFile"
 }
