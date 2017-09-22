@@ -22,6 +22,20 @@ new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't eve
 function mkdircd { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
+new-alias rg.exe "$env:localappdata\ripgrep\rg.exe" -force
+function rg {
+    $count = @($input).Count
+    $input.Reset()
+
+    if ($count) {
+        $input | rg.exe --hidden $args
+    }
+    else {
+        rg.exe --hidden $args
+    }
+}
+
+
 ##
 ## widows stuff
 ##
@@ -78,6 +92,7 @@ function new-restclient
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
 function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
+
 function rider {
     $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
     $rider_version = ls $rider_path | where mode -like 'd*' | sort | select -last 1
@@ -96,25 +111,25 @@ function open-solution ([switch]$rider) {
 ##
 ## Logging
 ##
-function get-logs ([string] $app, [switch]$formatted, [switch]$this) {
-    if ($this) {
+function get-logs ([string]$app, [switch]$formatted, [switch]$this, [string]$path) {
+	if ($this) {
         $app = (split-path (pwd) -leaf)
     }
-    
+	if ($app) {
+		$path = "$env:app_logs\$app\$app.log"
+	}
+	    
     if ($formatted) {
-        _getlogformatted -app $app
+        _getlogformatted -path $path
     } else {
-        _getlogjson -app $app
+        _getlogjson -path $path
     }
 }
-function _getlogjson ($app) {
-    get-content -tail 0 -wait -path "$env:app_logs\$app\$app.log" | %{convertfrom-json $_} 
+function _getlogjson ($path) {
+    get-content -tail 0 -wait -path $path | %{convertfrom-json $_} 
 }
-function _writelogformatted ($log, $color) { 
-    write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.message $log.exception -ForegroundColor $color 
-}
-function _getlogformatted ($app) { 
-    _getlogjson $app | select timestamp,severity,message,exception | %{
+function _getlogformatted ($path) { 
+    _getlogjson $path | select timestamp,severity,message,exception | %{
         if ($_.severity -in "error","fatal") {
             _writelogformatted $_ "red"
         } elseif ($_.severity -eq "warn") {
@@ -126,7 +141,9 @@ function _getlogformatted ($app) {
         }
     }
 }
-
+function _writelogformatted ($log, $color) { 
+    write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.message $log.exception -ForegroundColor $color 
+}
 
 
 
@@ -161,6 +178,7 @@ $global:prompt_prev_hist_id = 0
 $global:prompt_log_file = Join-Path $global:log_path "\shell-history-$(get-date -f 'yyyy-MM').log"
 
 function prompt {
+	$prev_LASTEXITCODE = $LASTEXITCODE
     $hist = Get-History -Count 1
     if ($hist.Id -gt $global:prompt_prev_hist_id) {  # log new entries only
         add-content -path $global:prompt_log_file -value "$($hist.StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) $pid [$global:prompt_prev_path] $($hist.CommandLine)"
@@ -170,7 +188,9 @@ function prompt {
     $cd = Get-Location
     $global:prompt_prev_path = $cd
 
-    write-host "[$(split-path $cd -leaf)]" -NoNewLine
+    write-host "[$(split-path $cd -leaf)" -NoNewLine
+	write-vcsstatus
+	write-host "]" -NoNewLine
 
     # $branch = git rev-parse --abbrev-ref HEAD 2>$null
     # if ($branch -ne $null) {
@@ -187,8 +207,13 @@ function prompt {
     }
 
 
-
+	$LASTEXITCODE = $prev_LASTEXITCODE
     return " " # supposed to return the prompt string, but then we cant get ~color~
 }
 
 if (test-isadmin) { Set-Location ~ }  # we need to do this manually..
+
+# have to do this after setting the prompt or we get the default posh-git prompt
+import-module posh-git 
+$global:GitPromptSettings.BeforeText = ' '
+$global:GitPromptSettings.AfterText = ''
