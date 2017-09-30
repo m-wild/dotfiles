@@ -35,6 +35,8 @@ function rg {
     }
 }
 
+new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
+
 
 ##
 ## widows stuff
