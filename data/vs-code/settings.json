@@ -12,9 +12,11 @@
     "window.menuBarVisibility": "toggle",
     "workbench.colorTheme": "Default Light+",
     "workbench.iconTheme": "vs-seti",
-    "editor.minimap.enabled": true,
+    "editor.minimap.enabled": false,
     "git.enableSmartCommit": true,
     "editor.codeLens": false,
     "window.restoreWindows": "none",
-    "workbench.startupEditor": "newUntitledFile"
+    "workbench.startupEditor": "newUntitledFile",
+    "extensions.ignoreRecommendations": false,
+    "workbench.activityBar.visible": false
 }
