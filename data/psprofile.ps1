@@ -91,7 +91,7 @@ function new-restclient
     { autorest -CodeGenerator CSharp -Modeler Swagger -Namespace "$namespace" -Input "$swaggerPath" }
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
-function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
+function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git push; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
 
 function rider {
     $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
