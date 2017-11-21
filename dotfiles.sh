@@ -3,39 +3,53 @@
 ## dotfiles.sh
 ## michael@mwild.me
 
+if [[ -z ${1+x} ]]; then
+  echo 'usage: ./dotfiles.sh command'
+  echo ''
+  echo 'commands:'
+  echo '    build  create symlinks'
+  echo '    clean  delete symlinks'
+  exit 0
+fi
 
-data="$(dirname $0)/data"
-config="$data/dotfiles.json"
+old_cwd=$(pwd)
 
-num_symlinks=$(jq -r ".symlink[].name" $config | wc -l)
-# echo "symlinks: $num_symlinks"
-for (( i=0; i<$num_symlinks; i++ )); do
-    enabled="$(jq -r ".symlink[$i].enabled.linux" $config)"
-    
-    if [[ $enabled != 'true' ]]; then
-        continue
+data_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/data"
+
+dotfiles=(
+  .bashrc
+  .psqlrc
+  .inputrc
+  .gitconfig
+  .bash_profile
+  .vimrc
+)
+
+cd ~
+
+if [[ $1 == 'clean' ]]; then
+  for file in ${dotfiles[@]}; do
+
+    if [[ -L $file ]]; then
+      echo "removing symlink at $file"
+      rm $file
     fi
-    
-    target_path="$data/$(jq -r ".symlink[$i].target" $config)"
-    link_path=$(jq -r ".symlink[$i].link.linux" $config)
 
-    echo "will link $link_path to target $target_path"
+  done
+fi
 
-    link_dir=$(dirname $link_path)
-    echo $link_dir
+if [[ $1 == 'build' ]]; then
+  for file in ${dotfiles[@]}; do
 
-    # why the hell does this not work with variables...
-    realpath -m $(eval $link_dir)
+    if [[ -f $file ]]; then
+      echo "file already exists at $file"
+    else
+      echo "create link $data_dir/$file <==> $file"
 
+      ln -s "$data_dir/$file" $file
+    fi
 
-    # if [[ ! -a $link_dir ]]
-    # then
-    #     echo "link dir does not exist"
-    #     echo "mkdir -p $link_dir"
-    # fi
+  done
+fi
 
-    # realpath 
-
-
-done
-
+cd $old_cwd

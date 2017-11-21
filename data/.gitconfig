@@ -1,9 +1,6 @@
 [user]
 	name = Michael Wildman
 	# user.email comes from $env:EMAIL
-[core]
-	autocrlf = true
-	editor = 'c:/program files (x86)/microsoft vs code/code.exe' --new-window --wait
 [push]
 	default = current
 [pull]
@@ -24,6 +21,6 @@
 	clean = git-lfs clean %f
 [difftool]
 	prompt = false
-[difftool "vscode"]
-	path = c:/program files (x86)/microsoft vs code/code.exe
-	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
+
+[include]
+	path = '.gitconfig.windows'

@@ -1,0 +1,26 @@
+## options
+# ignore case for tab-complete
+set completion-ignore-case on
+
+# show file type e.g. / for dirs
+set visible-stats on
+
+# list alternatives rather than sound bell
+set show-all-if-ambiguous on
+
+# place trailing / after synlinked directories
+set mark-symlinked-directories on
+
+# visible rather than audible bell
+set bell-style visible
+
+## keybinds
+# cycle through alternatives rather than wait for input
+TAB: menu-complete
+
+# shift-tab reverse cycle alternatives
+"\e[Z": "\e-1\C-i"
+
+# delete filenames rather than words
+"\C-w": unix-filename-rubout
+

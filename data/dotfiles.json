@@ -12,6 +12,12 @@
         "enabled": true
     },
     {
+        "name": "git",
+        "target": ".gitconfig.windows",
+        "link": "$env:userprofile\\.gitconfig.windows",
+        "enabled": true
+    },
+    {
         "name": "vscode-settings",
         "target": "vs-code\\settings.json",
         "link": "$env:appdata\\Code\\User\\settings.json",
