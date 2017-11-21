@@ -29,7 +29,9 @@ export EDITOR=vim
 
 # nodejs
 export NVM_DIR="$HOME/.nvm"
-source "/usr/local/opt/nvm/nvm.sh"
+if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
+  source /usr/local/opt/nvm/nvm.sh
+fi
 
 # aliases
 alias ls='ls -p --color=auto'
@@ -79,5 +81,9 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 export GIT_PS1_SHOWUPSTREAM=true
 export GIT_PS1_SHOWCOLORHINTS=true
 
-export PS1="[\W\$(__git_ps1 '${black} %s${normal}')]\\$ "
+if [[ ! -z $(type -t __git_ps1) ]]; then
+  export PS1="[\W\$(__git_ps1 '${black} %s${normal}')]\\$ "
+else
+  export PS1="[\W]\\$ "
+fi
 
