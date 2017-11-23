@@ -81,9 +81,13 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 export GIT_PS1_SHOWUPSTREAM=true
 export GIT_PS1_SHOWCOLORHINTS=true
 
-if [[ ! -z $(type -t __git_ps1) ]]; then
+
+export PS1="[\W]\\$ "
+
+if [[ -n $(type -t __git_ps1) ]]; then
   export PS1="[\W\$(__git_ps1 '${black} %s${normal}')]\\$ "
-else
-  export PS1="[\W]\\$ "
+fi
+if [[ -n $SSH_TTY ]]; then
+  export PS1="[${blue}\h${normal}:\W]\\$ "
 fi
 

@@ -12,7 +12,9 @@ set show-all-if-ambiguous on
 set mark-symlinked-directories on
 
 # visible rather than audible bell
-set bell-style visible
+#set bell-style visible
+# no bell, looks bad on remote sessions
+set bell-style none
 
 ## keybinds
 # cycle through alternatives rather than wait for input
