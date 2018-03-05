@@ -10,8 +10,8 @@ new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -force
 ##
 ## linux sugar
 ##
-new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe" -force
-new-alias vi npp -force
+#new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe" -force
+new-alias vi code -force
 new-alias open start -force
 new-alias grep Select-String -force
 new-alias touch New-Item -force
@@ -19,7 +19,7 @@ function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't every BIND tool in PATH.. just dig
-function mkdircd { mkdir $args[0]; cd $args[0]; }
+function mdc { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
 new-alias rg.exe "$env:localappdata\ripgrep\rg.exe" -force
@@ -85,6 +85,9 @@ new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
 new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe" -force
 new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" -force
 new-alias msbuild msbuild15 -force
+new-alias nuget451 "$env:user_tools_path\nuget\4.5.1.4879\nuget.exe" -force
+new-alias nuget nuget451 -force
+
 function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
 function open-vsts { chrome "$(__vstsuri)/" }
 function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
@@ -101,14 +104,35 @@ function rider {
     start-process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $args )
 }
 function open-solution ([switch]$rider) {
-    $sln = (gci -filter *.sln | select -first 1).Name
-    write-host "Opening solution $sln"
-    if ($rider) {
-        rider $sln
+    $allslns = gci -filter *.sln -recurse
+
+    if ($allslns.count -eq 1) {
+        $sln = $allslns | select -first 1
     } else {
-        open $sln
+        $choices = @()
+        for ($i = 0; $i -lt $allslns.count; $i++) {
+            $s = $allslns[$i]
+            $choices += New-Object System.Management.Automation.Host.ChoiceDescription "&$i $($s.Name)", $s.FullName
+        }
+
+        $choiceindex = $host.ui.PromptForChoice("", "Multiple solutions found...", $choices, 0)
+        $sln = $allslns[$choiceindex]
+    }
+    
+    write-host "Opening solution $($sln.Name)"
+    if ($rider) {
+        rider $sln.FullName
+    } else {
+        open $sln.FullName
     }
 }
+new-alias minio "$env:user_tools_path\minio\minio.exe" -force
+new-alias mc "$env:user_tools_path\minio\mc.exe" -force
+function minio-server { 
+    minio server "$env:user_tools_path\minio\data" --config-dir "$env:user_tools_path\minio\etc" 
+}
+
+
 
 ##
 ## Logging
