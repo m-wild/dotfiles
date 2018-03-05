@@ -1,6 +1,7 @@
-[user]
-	name = Michael Wildman
-	# user.email comes from $env:EMAIL
+[include]
+	path = ~/.gitconfig.local
+	path = .gitconfig.windows
+
 [push]
 	default = current
 [pull]
@@ -21,6 +22,3 @@
 	clean = git-lfs clean %f
 [difftool]
 	prompt = false
-
-[include]
-	path = '.gitconfig.windows'
