@@ -18,5 +18,7 @@
     "window.restoreWindows": "none",
     "workbench.startupEditor": "newUntitledFile",
     "extensions.ignoreRecommendations": false,
-    "workbench.activityBar.visible": false
+    "workbench.activityBar.visible": true,
+    "git.autofetch": true,
+    "diffEditor.ignoreTrimWhitespace": true
 }
