@@ -20,5 +20,29 @@
     "extensions.ignoreRecommendations": false,
     "workbench.activityBar.visible": true,
     "git.autofetch": true,
-    "diffEditor.ignoreTrimWhitespace": true
+    "diffEditor.ignoreTrimWhitespace": true,
+    "mssql.connections": [
+        {
+            "server": "billplusdb_dev.callplus.co.nz",
+            "database": "Callplus",
+            "authenticationType": "Integrated",
+            "profileName": "billplusdb_dev"
+        },
+        {
+            "server": "visibilldb_dev.callplus.co.nz",
+            "database": "AppMeta",
+            "authenticationType": "Integrated",
+            "profileName": "visibilldb_dev"
+        },
+        {
+            "server": "energy.db.dev.vocusgroup.co.nz",
+            "database": "Energy",
+            "authenticationType": "Integrated",
+            "profileName": "energydb_dev"
+        }
+    ],
+    "mssql.messagesDefaultOpen": false,
+    "mssql.format.keywordCasing": "uppercase",
+    "mssql.format.datatypeCasing": "uppercase",
+    "mssql.query.displayBitAsNumber": false
 }
