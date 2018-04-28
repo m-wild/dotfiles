@@ -22,7 +22,7 @@ new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't eve
 function mdc { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
-. "$env:localappdata\ripgrep\_rg.ps1"
+if (test-path "$env:localappdata\ripgrep\_rg.ps1") { . "$env:localappdata\ripgrep\_rg.ps1" }
 new-alias rg.exe "$env:localappdata\ripgrep\rg.exe" -force
 function rg {
     $count = @($input).Count
