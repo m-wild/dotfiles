@@ -22,6 +22,7 @@ new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't eve
 function mdc { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
+. "$env:localappdata\ripgrep\_rg.ps1"
 new-alias rg.exe "$env:localappdata\ripgrep\rg.exe" -force
 function rg {
     $count = @($input).Count
@@ -46,8 +47,15 @@ function reset-color { [Console]::ResetColor() }
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$env:windir\system32\drivers\etc\hosts" ) }
 function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
 function add-path {
-    $env:path += ";$args"
-    [Environment]::SetEnvironmentVariable("Path", $env:path + ";$args", [EnvironmentVariableTarget]::Machine)
+    # update the saved env
+    $userpath = [Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User).Split(';');
+    $userpath[-1] = $args[0]
+    $newpath = [String]::Join(";", $userpath) + ";"
+    Write-Host "User %PATH% will be set to $newpath"
+    [Environment]::SetEnvironmentVariable("PATH", $newpath, [EnvironmentVariableTarget]::User)
+
+    # also update the current process env
+    $env:path += $args[0] + ";"
 }
 function format-json { $args | convertfrom-json | convertto-json }
 
@@ -68,7 +76,9 @@ function ssh-copy-id {
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
 }
-new-alias openssl "${env:programfiles(x86)}\openssl\bin\openssl.exe" -force
+new-alias openssl "$env:programfiles\Git\usr\bin\openssl.exe" -force
+new-alias ssh-keygen "$env:programfiles\Git\usr\bin\ssh-keygen.exe" -force
+
 function rdp { mstsc /v:"$args.callplus.co.nz" }
 
 ##
@@ -83,12 +93,12 @@ function google { chrome "https://www.google.co.nz/search?q=$args" }
 ##
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
 new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe" -force
-new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" -force
+new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe" -force
 new-alias msbuild msbuild15 -force
 new-alias nuget451 "$env:user_tools_path\nuget\4.5.1.4879\nuget.exe" -force
 new-alias nuget nuget451 -force
 
-function __vstsuri { ((git remote -v)[0] -split "`t" -split " ")[1] }
+function __vstsuri { "https://vocusgroupnz.visualstudio.com/Vocus/_git/" + (git remote get-url origin).split('/')[-1] }
 function open-vsts { chrome "$(__vstsuri)/" }
 function new-pullrequest { chrome "$(__vstsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 function new-restclient
@@ -98,13 +108,56 @@ function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; 
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
 function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git push; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
 
+function git-https-to-ssh {
+    echo "=== current ==="
+    git remote -v
+    $current = git remote get-url origin
+    if (!$current.startsWith("https://vocusgroupnz.visualstudio.com"))
+    {
+        echo "Not a VSTS https repo"
+        return
+    }
+
+    $reponame = $current.Split("/")[-1]
+    git remote set-url origin ssh://vocusgroupnz@vs-ssh.visualstudio.com:22/Vocus/_ssh/$reponame
+    echo ""
+    echo "=== new ==="
+    git remote -v
+}
+function git-https-to-ssh-all {
+    $repos = gci
+    
+    foreach ($r in $repos) {
+        Push-Location
+        cd $r
+
+        $dotgit = ls -Force -Filter '.git'
+        if ($dotgit.count -eq 0)
+        {
+            echo "not a git repo"
+        }
+        else
+        {
+            git-https-to-ssh
+        }
+
+        Pop-Location
+    }
+}
+
+
+
 function rider {
     $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
     $rider_version = ls $rider_path | where mode -like 'd*' | sort | select -last 1
     start-process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $args )
 }
-function open-solution ([switch]$rider) {
-    $allslns = gci -filter *.sln -recurse
+function open-solution ([string] $path, [switch] $rider) {
+    if (!$path) {
+        $path = get-location
+    }
+
+    $allslns = gci -filter *.sln -Path $path -Depth 3
 
     if ($allslns.count -eq 1) {
         $sln = $allslns | select -first 1
@@ -160,7 +213,7 @@ function _getlogformatted ($path) {
             _writelogformatted $_ "red"
         } elseif ($_.severity -eq "warn") {
             _writelogformatted $_ "yellow"
-        } elseif ($_.severity -in "trace","debug") {
+        } elseif ($_.severity -in "trace","debug","verbose") {
             _writelogformatted $_ "darkgray"
         } else {
             _writelogformatted $_ "gray"

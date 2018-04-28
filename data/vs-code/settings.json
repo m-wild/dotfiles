@@ -10,7 +10,7 @@
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
     "window.menuBarVisibility": "toggle",
-    "workbench.colorTheme": "Default Light+",
+    "workbench.colorTheme": "Quiet Light",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": false,
     "git.enableSmartCommit": true,
@@ -44,5 +44,6 @@
     "mssql.messagesDefaultOpen": false,
     "mssql.format.keywordCasing": "uppercase",
     "mssql.format.datatypeCasing": "uppercase",
-    "mssql.query.displayBitAsNumber": false
+    "mssql.query.displayBitAsNumber": false,
+    "editor.renderWhitespace": "none"
 }
