@@ -62,24 +62,14 @@ function format-json { $args | convertfrom-json | convertto-json }
 ##
 ## ssh/scp/ssl/rdp
 ##
-function ssh { putty $args -new_console }  # note: -new_console is for conemu
-function ssh-agent {
-    push-location
-    set-location $env:systemroot  # pageant locks the folder that it starts in so start it in systemroot
-    pageant $global:ssh_private_id 
-    pop-location
-}
 function ssh-copy-id {
     $cred = get-credential
-    get-content $global:ssh_public_id | plink $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
+    get-content $global:ssh_public_id | ssh $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
 }
 new-alias openssl "$env:programfiles\Git\usr\bin\openssl.exe" -force
-new-alias ssh-keygen "$env:programfiles\Git\usr\bin\ssh-keygen.exe" -force
-
-function rdp { mstsc /v:"$args.callplus.co.nz" }
 
 ##
 ## web
