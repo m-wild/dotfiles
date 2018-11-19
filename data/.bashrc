@@ -1,8 +1,6 @@
 ## .bashrc
 ## michael@mwild.me
 
-export EMAIL='michael@mwild.me'
-
 if [[ -d /usr/local/sbin ]]; then
   export PATH=$PATH:/usr/local/sbin
 fi
