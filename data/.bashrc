@@ -38,7 +38,9 @@ if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
 fi
 
 # ruby
-eval "$(rbenv init -)"
+if [[ -f /usr/local/bin/rbenv ]]; then
+  eval "$(rbenv init -)"
+fi
 
 # golang
 export GOPATH=~/go
