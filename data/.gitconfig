@@ -1,7 +1,6 @@
 [include]
 	path = ~/.gitconfig.local
 	path = .gitconfig.windows
-
 [push]
 	default = current
 [pull]
@@ -17,8 +16,11 @@
 	st = status
 	co = commit
 [filter "lfs"]
-	smudge = git-lfs smudge %f
+	smudge = git-lfs smudge -- %f
 	required = true
-	clean = git-lfs clean %f
+	clean = git-lfs clean -- %f
+	process = git-lfs filter-process
 [difftool]
 	prompt = false
+[core]
+  ignorecase = false

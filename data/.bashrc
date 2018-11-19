@@ -3,6 +3,10 @@
 
 export EMAIL='michael@mwild.me'
 
+if [[ -d /usr/local/sbin ]]; then
+  export PATH=$PATH:/usr/local/sbin
+fi
+
 # import extra bash completion
 if [[ -f /usr/local/etc/bash_completion ]]; then
   source /usr/local/etc/bash_completion
@@ -33,14 +37,20 @@ if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
   source /usr/local/opt/nvm/nvm.sh
 fi
 
+# ruby
+eval "$(rbenv init -)"
+
+# golang
+export GOPATH=~/go
+if [[ -d $GOPATH/bin ]]; then
+  export PATH=$PATH:$GOPATH/bin
+fi
+
+
 # aliases
 alias ls='ls -p --color=auto'
 alias ll='ls -alF'
 alias grep='grep --color=auto'
-
-# restic backup -- use envchain for password
-alias restic='envchain restic restic'
-alias restic-forget='restic forget --keep-weekly 1 --keep-yearly 2'
 
 # prompt/history
 export HISTCONTROL=ignoredups:erasedups
@@ -85,9 +95,9 @@ export GIT_PS1_SHOWCOLORHINTS=true
 export PS1="[\W]\\$ "
 
 if [[ -n $(type -t __git_ps1) ]]; then
-  export PS1="[\W\$(__git_ps1 '${black} %s${normal}')]\\$ "
+  export PS1="[\W\$(__git_ps1 '\[${black}\] %s\[${blue}\]')]\\$ "
 fi
 if [[ -n $SSH_TTY ]]; then
-  export PS1="[${blue}\h${normal}:\W]\\$ "
+  export PS1="[\[${blue}\]\h\[${normal}\]:\W]\\$ "
 fi
 
