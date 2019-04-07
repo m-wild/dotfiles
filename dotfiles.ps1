@@ -62,26 +62,4 @@ process {
             }
         }
     }
-
-    # --- 2. registry keys
-    foreach ($reg in $config.reg | where enabled) {
-        write-host "`n>> $($reg.name)"
-
-
-        if ($action -eq "clean") {
-            if (!(test-path $reg.cleanPath)) {
-                write-host "$($reg.cleanPath) already clean"
-            } else {
-                write-host "removing registry keys $($reg.cleanPath)"
-                remove-item -Recurse -Path $reg.cleanPath
-            }
-        }
-        elseif ($action -eq "build") {
-            $reg.importPath = Join-Path $path $reg.importPath
-            
-            write-host "importing reg $($reg.importPath)... " -nonewline
-            reg.exe import $reg.importPath
-        }
-    }
-
 }

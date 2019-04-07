@@ -30,23 +30,9 @@
         "enabled": true
     },
     {
-        "name": "ahk",
-        "target": "mwil.ahk",
-        "link": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
-        "enabled": false
-    },
-    {
         "name": "conemu",
         "target": "ConEmu.xml",
         "link": "$env:appdata\\ConEmu.xml",
         "enabled": true
-    }
-],
-"reg": [
-    {
-        "name": "putty",
-        "importPath": "putty-settings.reg",
-        "cleanPath": "HKCU://software/SimonTatham/PuTTY/Sessions",
-        "enabled": false
     }
 ]}
