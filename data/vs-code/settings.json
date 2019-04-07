@@ -7,9 +7,11 @@
     "git.confirmSync": false,
     "window.zoomLevel": -0.5,
     "editor.fontSize": 14,
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
-    "window.menuBarVisibility": "toggle",
+    "window.menuBarVisibility": "default",
     "workbench.colorTheme": "Quiet Light",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": false,
@@ -39,11 +41,31 @@
             "database": "Energy",
             "authenticationType": "Integrated",
             "profileName": "energydb_dev"
+        },
+        {
+            "server": "(localdb)\\mssqllocaldb",
+            "database": "",
+            "authenticationType": "Integrated",
+            "profileName": "MSSQLLocalDB",
+            "password": ""
         }
     ],
     "mssql.messagesDefaultOpen": false,
     "mssql.format.keywordCasing": "uppercase",
     "mssql.format.datatypeCasing": "uppercase",
     "mssql.query.displayBitAsNumber": false,
-    "editor.renderWhitespace": "none"
+    "editor.renderWhitespace": "none",
+    "php.validate.executablePath": "C:\\Users\\michael.wildman.VOCUS\\tools\\php-7.2.5-nts-Win32-VC15-x64\\php.exe",
+    "bracketPairColorizer.forceIterationColorCycle": true,
+    "team.showWelcomeMessage": false,
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "window.titleBarStyle": "custom",
+    "gitlens.views.repositories.location": "scm",
+    "gitlens.views.fileHistory.location": "scm",
+    "gitlens.views.lineHistory.location": "scm",
+    "gitlens.views.search.location": "scm",
+    "gitlens.views.compare.location": "scm",
+    "editor.tabSize": 2
 }
