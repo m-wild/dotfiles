@@ -33,7 +33,7 @@
         "name": "ahk",
         "target": "mwil.ahk",
         "link": "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\mwil.ahk",
-        "enabled": true
+        "enabled": false
     },
     {
         "name": "conemu",
@@ -47,6 +47,6 @@
         "name": "putty",
         "importPath": "putty-settings.reg",
         "cleanPath": "HKCU://software/SimonTatham/PuTTY/Sessions",
-        "enabled": true
+        "enabled": false
     }
 ]}
