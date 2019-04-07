@@ -2,15 +2,11 @@
 ## michael@mwild.me
 
 $global:ssh_public_id  = join-path $env:ssh_key_directory "id_rsa.pub"
-$global:ssh_private_id = join-path $env:ssh_key_directory "id_rsa.ppk"
 $global:log_path       = join-path $env:user_home ".logs"
 
 new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -force
 
-##
 ## linux sugar
-##
-#new-alias npp "${env:programfiles(x86)}\Notepad++\Notepad++.exe" -force
 new-alias vi code -force
 new-alias open start -force
 new-alias grep Select-String -force
@@ -18,32 +14,12 @@ new-alias touch New-Item -force
 function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
-new-alias less "C:\Program Files\Git\usr\bin\less.exe" -force
 new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't every BIND tool in PATH.. just dig
 function mdc { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 function lc { measure-object -line }
 
-if (test-path "$env:localappdata\ripgrep\_rg.ps1") { . "$env:localappdata\ripgrep\_rg.ps1" }
-new-alias rg.exe "$env:localappdata\ripgrep\rg.exe" -force
-function rg {
-    $count = @($input).Count
-    $input.Reset()
-
-    if ($count) {
-        $input | rg.exe --hidden $args
-    }
-    else {
-        rg.exe --hidden $args
-    }
-}
-
-new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
-
-
-##
 ## widows stuff
-##
 function mklink { cmd.exe /c mklink $args }
 function reset-color { [Console]::ResetColor() }
 function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$env:windir\system32\drivers\etc\hosts" ) }
@@ -62,27 +38,22 @@ function add-path {
 }
 function format-json { $args | convertfrom-json | convertto-json }
 
-##
+# script to wrap restic using windows credential store
+new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
+
 ## ssh/scp/ssl/rdp
-##
 function ssh-copy-id {
     get-content $global:ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
 }
-new-alias openssl "$env:programfiles\Git\usr\bin\openssl.exe" -force
 
-##
 ## web
-##
 new-alias chrome "${env:programfiles(x86)}\Google\Chrome Beta\Application\chrome.exe" -force
 new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe" -force
-function google { chrome "https://www.google.co.nz/search?q=$args" }
 
-##
 ## code/build
-##
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
 new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe" -force
 new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe" -force
@@ -91,53 +62,15 @@ new-alias nuget451 "$env:user_tools_path\nuget\4.5.1.4879\nuget.exe" -force
 new-alias nuget nuget451 -force
 new-alias vstest "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Professional\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -force
 
-function __vstsuri { "https://vocusgroupnz.visualstudio.com/Vocus/_git/" + (git remote get-url origin).split('/')[-1] }
 function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
-
 function open-azdevops { chrome "$(__azdevopsuri)/" }
 function new-pullrequest { chrome "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
 function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git push; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
 
-function git-https-to-ssh {
-    echo "=== current ==="
-    git remote -v
-    $current = git remote get-url origin
-    if (!$current.startsWith("https://vocusgroupnz.visualstudio.com"))
-    {
-        echo "Not a VSTS https repo"
-        return
-    }
-
-    $reponame = $current.Split("/")[-1]
-    git remote set-url origin ssh://vocusgroupnz@vs-ssh.visualstudio.com:22/Vocus/_ssh/$reponame
-    echo ""
-    echo "=== new ==="
-    git remote -v
-}
-function git-https-to-ssh-all {
-    $repos = gci
-    
-    foreach ($r in $repos) {
-        Push-Location
-        cd $r
-
-        $dotgit = ls -Force -Filter '.git'
-        if ($dotgit.count -eq 0)
-        {
-            echo "not a git repo"
-        }
-        else
-        {
-            git-https-to-ssh
-        }
-
-        Pop-Location
-    }
-}
-
-function unittest ([switch]$build) {
+# discover and run dotnet unit tests
+function dotnet-unittest ([switch]$build) {
     if ($build) {
         $sln = (gci *.sln)[0]
         msbuild /t:rebuild /v:minimal /m $sln
@@ -187,17 +120,8 @@ function open-solution ([string] $path, [switch] $rider) {
         open $sln.FullName
     }
 }
-new-alias minio "$env:user_tools_path\minio\minio.exe" -force
-new-alias mc "$env:user_tools_path\minio\mc.exe" -force
-function minio-server { 
-    minio server "$env:user_tools_path\minio\data" --config-dir "$env:user_tools_path\minio\etc" 
-}
 
-
-
-##
 ## Logging
-##
 function get-logs ([string]$app, [switch]$formatted, [switch]$this, [string]$path) {
 	if ($this) {
         $app = (split-path (pwd) -leaf)
@@ -233,11 +157,7 @@ function _writelogformatted ($log, $color) {
     write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.message $log.exception -ForegroundColor $color 
 }
 
-
-
-##
 ## vanity
-##
 function get-sysinfo {
     $os   = Get-WmiObject Win32_OperatingSystem
     $proc = Get-WmiObject Win32_Processor
@@ -251,23 +171,18 @@ function get-sysinfo {
     write-host $gpu.devicename
 }
 
-
 function test-isadmin {  # test if the current shell is elevated
     return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 }
 
-
 Set-Variable HOME $env:user_home -Force  			 # Set and force overwrite of the $HOME variable
 (get-psprovider 'FileSystem').Home = $env:user_home  # set the "~" shortcut
-
-
 
 # z.ps https://github.com/JannesMeyer/z.ps
 if (test-path "$env:HOMEDRIVE\$env:HOMEPATH\Documents\WindowsPowerShell\Modules\z") {
     import-module z
     set-alias z search-navigationhistory -force
 }
-
 
 # custom prompt w/ logging
 $global:prompt_prev_dir = Get-Location
