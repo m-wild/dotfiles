@@ -12,7 +12,7 @@
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
     "window.menuBarVisibility": "default",
-    "workbench.colorTheme": "Quiet Light",
+    "workbench.colorTheme": "Nord",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": false,
     "git.enableSmartCommit": true,
@@ -67,5 +67,11 @@
     "gitlens.views.lineHistory.location": "scm",
     "gitlens.views.search.location": "scm",
     "gitlens.views.compare.location": "scm",
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "workbench.settings.editor": "json",
+    "gitlens.gitExplorer.location": "scm",
+    "gitlens.historyExplorer.location": "scm",
+    "gitlens.resultsExplorer.location": "scm",
+    "gitlens.currentLine.enabled": false,
+    "gitlens.hovers.currentLine.over": "line",
 }
