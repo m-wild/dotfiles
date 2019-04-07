@@ -66,8 +66,7 @@ function format-json { $args | convertfrom-json | convertto-json }
 ## ssh/scp/ssl/rdp
 ##
 function ssh-copy-id {
-    $cred = get-credential
-    get-content $global:ssh_public_id | ssh $args -l $cred.username -pw $cred.getNetworkCredential().password 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
+    get-content $global:ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
 function copy-sshpublickey {
     get-content $global:ssh_public_id | clip
