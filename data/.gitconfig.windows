@@ -1,7 +1,7 @@
 [core]
 	autocrlf = true
-	editor = 'c:/program files/microsoft vs code/code.exe' --new-window --wait
+	editor = '~/AppData/Local/Programs/microsoft vs code/code.exe' --wait
 
 [difftool "vscode"]
-	path = c:/program files/microsoft vs code/code.exe
+	path = ~/AppData/Local/Programs/microsoft vs code/code.exe
 	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"

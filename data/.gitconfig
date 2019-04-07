@@ -23,6 +23,6 @@
 [difftool]
 	prompt = false
 [core]
-  	ignorecase = false
+	ignorecase = false
 [credential]
 	helper = manager
