@@ -14,7 +14,7 @@
 	lga = "log --graph --abbrev-commit --decorate --date=relative --format=oneline"
 	lg = "log --graph --abbrev-commit --decorate --date=relative --format=oneline --first-parent HEAD"
 	st = status
-	co = commit
+	co = commit -a -m
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	required = true
@@ -23,4 +23,6 @@
 [difftool]
 	prompt = false
 [core]
-  ignorecase = false
+  	ignorecase = false
+[credential]
+	helper = manager
