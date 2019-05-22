@@ -10,6 +10,18 @@ if [[ -f /usr/local/etc/bash_completion ]]; then
   source /usr/local/etc/bash_completion
 fi
 
+# homebrew bash completion
+if type brew &>/dev/null; then
+  for COMPLETION in $(brew --prefix)/etc/bash_completion.d/*
+  do
+    [[ -f $COMPLETION ]] && source "$COMPLETION"
+  done
+  if [[ -f $(brew --prefix)/etc/profile.d/bash_completion.sh ]];
+  then
+    source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+  fi
+fi
+
 # macos only stuff
 if [[ $(uname -s) == 'Darwin' ]]; then
 
@@ -46,6 +58,8 @@ if [[ -d $GOPATH/bin ]]; then
   export PATH=$PATH:$GOPATH/bin
 fi
 
+# dotnet
+export ASPNETCORE_ENVIRONMENT=Development
 
 # aliases
 alias ls='ls -p --color=auto'
