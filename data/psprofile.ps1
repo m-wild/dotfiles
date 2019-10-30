@@ -1,9 +1,6 @@
 ## powershell profile
 ## michael@mwild.me
 
-$global:ssh_public_id  = join-path $env:ssh_key_directory "id_rsa.pub"
-$global:log_path       = join-path $env:user_home ".logs"
-
 new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -force
 
 ## linux sugar
@@ -14,10 +11,10 @@ new-alias touch New-Item -force
 function ll { Get-ChildItem -Force $args }
 function which { (Get-Command -All $args).Definition }
 function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
-new-alias dig "$env:programfiles\ISC BIND 9\bin\dig.exe" -force # dont wan't every BIND tool in PATH.. just dig
 function mdc { mkdir $args[0]; cd $args[0]; }
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 function lc { measure-object -line }
+function bash { & "$env:USERPROFILE\scoop\apps\git\current\bin\sh.exe" --login }
 
 ## widows stuff
 function mklink { cmd.exe /c mklink $args }
@@ -37,16 +34,27 @@ function add-path {
     $env:path += $args[0] + ";"
 }
 function format-json { $args | convertfrom-json | convertto-json }
+function convertto-base64 { 
+    param([Parameter(ValueFromPipeline=$true)] $Value)
+    $Value | %{ $b = [System.Text.Encoding]::UTF8.GetBytes($_); [System.Convert]::ToBase64String($b); }
+}
+function convertfrom-base64 {
+    param ([Parameter(ValueFromPipeline=$true)] $Value)
+    $Value | %{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
+}
+
 
 # script to wrap restic using windows credential store
 new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
 
 ## ssh/scp/ssl/rdp
 function ssh-copy-id {
-    get-content $global:ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
+    $ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
+    get-content $ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
 function copy-sshpublickey {
-    get-content $global:ssh_public_id | clip
+    $ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
+    get-content $ssh_public_id | clip
 }
 
 ## web
@@ -55,19 +63,24 @@ new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe" -force
 
 ## code/build
 new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
-new-alias msbuild14 "${env:programfiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe" -force
-new-alias msbuild15 "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe" -force
-new-alias msbuild msbuild15 -force
-new-alias nuget451 "$env:user_tools_path\nuget\4.5.1.4879\nuget.exe" -force
-new-alias nuget nuget451 -force
-new-alias vstest "${env:programfiles(x86)}\Microsoft Visual Studio\2017\Professional\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -force
+new-alias msbuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe" -force
+new-alias vstest "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -force
 
 function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
 function open-azdevops { chrome "$(__azdevopsuri)/" }
 function new-pullrequest { chrome "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
-function git-pushdev { $branch = git rev-parse --abbrev-ref HEAD; git push; git checkout dev; git reset --hard $branch; git push -f; git checkout $branch; }
+function git-pushdev { 
+    $branch = git rev-parse --abbrev-ref HEAD; 
+    Write-Host "Step 1: Pushing $branch..." -ForegroundColor Green
+    git push; 
+    Write-Host "Step 2: Reset dev to $branch..." -ForegroundColor Green
+    git checkout dev; git reset --hard $branch; 
+    Write-Host "Step 3: Force push dev" -ForegroundColor Green
+    git push -f; 
+    git checkout $branch;
+}
 
 # discover and run dotnet unit tests
 function dotnet-unittest ([switch]$build) {
@@ -90,10 +103,10 @@ function dotnet-unittest ([switch]$build) {
 
 function rider {
     $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
-    $rider_version = ls $rider_path | where mode -like 'd*' | sort | select -last 1
+    $rider_version = ls $rider_path | where mode -like 'd*' | where name -notlike '*.plugins' | sort | select -last 1
     start-process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $args )
 }
-function open-solution ([string] $path, [switch] $rider) {
+function open-solution ([string] $path, [switch] $vs) {
     if (!$path) {
         $path = get-location
     }
@@ -114,10 +127,10 @@ function open-solution ([string] $path, [switch] $rider) {
     }
     
     write-host "Opening solution $($sln.Name)"
-    if ($rider) {
-        rider $sln.FullName
-    } else {
+    if ($vs) {
         open $sln.FullName
+    } else {
+        rider $sln.FullName
     }
 }
 
@@ -179,7 +192,7 @@ Set-Variable HOME $env:user_home -Force  			 # Set and force overwrite of the $H
 (get-psprovider 'FileSystem').Home = $env:user_home  # set the "~" shortcut
 
 # z.ps https://github.com/JannesMeyer/z.ps
-if (test-path "$env:HOMEDRIVE\$env:HOMEPATH\Documents\WindowsPowerShell\Modules\z") {
+if (test-path "$env:user_tools_path\pwsh\modules\z") {
     import-module z
     set-alias z search-navigationhistory -force
 }
@@ -187,6 +200,7 @@ if (test-path "$env:HOMEDRIVE\$env:HOMEPATH\Documents\WindowsPowerShell\Modules\
 # custom prompt w/ logging
 $global:prompt_prev_dir = Get-Location
 $global:prompt_prev_hist_id = 0
+$global:log_path        = join-path $env:user_home ".logs"
 $global:prompt_log_file = Join-Path $global:log_path "\shell-history-$(get-date -f 'yyyy-MM').log"
 
 function prompt {

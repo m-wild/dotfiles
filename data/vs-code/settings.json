@@ -5,14 +5,13 @@
         "*.conf": "ini"
     },
     "git.confirmSync": false,
-    "window.zoomLevel": -0.5,
-    "editor.fontSize": 14,
+    // "window.zoomLevel": -0.5,
+    "editor.fontSize": 13,
     "editor.fontLigatures": true,
     "editor.fontFamily": "Consolas, 'Courier New', monospace",
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
     "window.menuBarVisibility": "default",
-    "workbench.colorTheme": "Nord",
     "workbench.iconTheme": "vs-seti",
     "editor.minimap.enabled": false,
     "git.enableSmartCommit": true,
@@ -46,8 +45,7 @@
             "server": "(localdb)\\mssqllocaldb",
             "database": "",
             "authenticationType": "Integrated",
-            "profileName": "MSSQLLocalDB",
-            "password": ""
+            "profileName": "mssqllocaldb"
         }
     ],
     "mssql.messagesDefaultOpen": false,
@@ -55,9 +53,6 @@
     "mssql.format.datatypeCasing": "uppercase",
     "mssql.query.displayBitAsNumber": false,
     "editor.renderWhitespace": "none",
-    "php.validate.executablePath": "C:\\Users\\michael.wildman.VOCUS\\tools\\php-7.2.5-nts-Win32-VC15-x64\\php.exe",
-    "bracketPairColorizer.forceIterationColorCycle": true,
-    "team.showWelcomeMessage": false,
     "gitlens.advanced.messages": {
         "suppressShowKeyBindingsNotice": true
     },
@@ -69,9 +64,17 @@
     "gitlens.views.compare.location": "scm",
     "editor.tabSize": 2,
     "workbench.settings.editor": "json",
-    "gitlens.gitExplorer.location": "scm",
-    "gitlens.historyExplorer.location": "scm",
-    "gitlens.resultsExplorer.location": "scm",
     "gitlens.currentLine.enabled": false,
     "gitlens.hovers.currentLine.over": "line",
+    "breadcrumbs.enabled": false,
+    "[json]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "terminal.integrated.rendererType": "dom",
+    "[javascript]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "workbench.colorTheme": "Quiet Light",
+    "go.formatTool": "goimports",
+    "go.useLanguageServer": true,
 }
