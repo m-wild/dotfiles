@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2019-04-07 20:29:24" build="190331">
+		<key name=".Vanilla" modified="2019-10-21 08:50:00" build="191012">
 			<value name="StartType" type="hex" data="02"/>
 			<value name="CmdLine" type="string" data=""/>
 			<value name="StartTasksFile" type="string" data=""/>
@@ -366,11 +366,11 @@
 			<value name="Cascaded" type="hex" data="01"/>
 			<value name="IntegralSize" type="hex" data="00"/>
 			<value name="WindowMode" type="dword" data="0000051f"/>
-			<value name="ConWnd X" type="long" data="88"/>
-			<value name="ConWnd Y" type="long" data="380"/>
-			<value name="LastMonitor" type="string" data="0,0,2560,1410"/>
-			<value name="ConWnd Width" type="dword" data="00000098"/>
-			<value name="ConWnd Height" type="dword" data="0000002a"/>
+			<value name="ConWnd X" type="long" data="300"/>
+			<value name="ConWnd Y" type="long" data="183"/>
+			<value name="LastMonitor" type="string" data="0,0,1920,1050"/>
+			<value name="ConWnd Width" type="dword" data="0000009e"/>
+			<value name="ConWnd Height" type="dword" data="0000002c"/>
 			<value name="16bit Height" type="ulong" data="0"/>
 			<value name="Restore2ActiveMon" type="hex" data="00"/>
 			<value name="QuakeAnimation" type="ulong" data="0"/>
@@ -439,8 +439,8 @@
 			<value name="SendAltPrintScrn" type="hex" data="00"/>
 			<value name="SendPrintScrn" type="hex" data="00"/>
 			<value name="SendCtrlEsc" type="hex" data="00"/>
-			<value name="Min2Tray" type="hex" data="01"/>
-			<value name="AlwaysShowTrayIcon" type="hex" data="01"/>
+			<value name="Min2Tray" type="hex" data="00"/>
+			<value name="AlwaysShowTrayIcon" type="hex" data="00"/>
 			<value name="SafeFarClose" type="hex" data="01"/>
 			<value name="SafeFarCloseMacro" type="string" data=""/>
 			<value name="FARuseASCIIsort" type="hex" data="00"/>
@@ -768,6 +768,7 @@
 			<value name="DynamicBufferHeight" type="hex" data="01"/>
 			<value name="StatusBar.Hide.WMode" type="hex" data="01"/>
 			<value name="AutoTrimSingleLine" type="hex" data="00"/>
+			<value name="AnsiLogCodes" type="hex" data="00"/>
 		</key>
 	</key>
 </key>
