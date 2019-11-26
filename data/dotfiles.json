@@ -33,6 +33,6 @@
         "name": "conemu",
         "target": "ConEmu.xml",
         "link": "$env:appdata\\ConEmu.xml",
-        "enabled": true
+        "enabled": false
     }
 ]}
