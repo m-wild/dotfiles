@@ -6,9 +6,9 @@
     },
     "git.confirmSync": false,
     // "window.zoomLevel": -0.5,
-    "editor.fontSize": 13,
+    "editor.fontSize": 14,
     "editor.fontLigatures": true,
-    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.fontFamily": "'Cascadia Code', Consolas, monospace",
     "workbench.editor.showIcons": false,
     "editor.wordWrap": "on",
     "window.menuBarVisibility": "default",
@@ -64,7 +64,6 @@
     "gitlens.views.compare.location": "scm",
     "editor.tabSize": 2,
     "workbench.settings.editor": "json",
-    "gitlens.currentLine.enabled": false,
     "gitlens.hovers.currentLine.over": "line",
     "breadcrumbs.enabled": false,
     "[json]": {
@@ -77,4 +76,6 @@
     "workbench.colorTheme": "Quiet Light",
     "go.formatTool": "goimports",
     "go.useLanguageServer": true,
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.enabled": false,
 }
