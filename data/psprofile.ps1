@@ -16,6 +16,12 @@ Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 function lc { measure-object -line }
 function bash { & "$env:USERPROFILE\scoop\apps\git\current\bin\sh.exe" --login }
 
+## kubernetes/docker
+new-alias k kubectl -force
+new-alias g git -force
+new-alias d docker -force
+new-alias kns kubenswin -force
+
 ## widows stuff
 function mklink { cmd.exe /c mklink $args }
 function reset-color { [Console]::ResetColor() }
@@ -58,7 +64,7 @@ function copy-sshpublickey {
 }
 
 ## web
-new-alias chrome "${env:programfiles(x86)}\Google\Chrome Beta\Application\chrome.exe" -force
+new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe" -force
 new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe" -force
 
 ## code/build
