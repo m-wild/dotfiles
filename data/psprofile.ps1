@@ -49,6 +49,7 @@ function convertfrom-base64 {
     $Value | %{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
 }
 
+function Write-SHA1Hash ($Path) { (Get-FileHash -Algorithm SHA1 $Path).Hash > "$Path.sha1" }
 
 # script to wrap restic using windows credential store
 new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
