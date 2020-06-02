@@ -50,17 +50,15 @@ function convertfrom-base64 {
     $Value | %{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
 }
 
-
-# script to wrap restic using windows credential store
-new-alias restic "$env:user_tools_path\restic\restic.ps1" -force
+function Write-SHA1Hash ($Path) { (Get-FileHash -Algorithm SHA1 $Path).Hash > "$Path.sha1" }
 
 ## ssh/scp/ssl/rdp
 function ssh-copy-id {
-    $ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
+    $ssh_public_id = join-path $env:ssh_key_directory "id_ed25519.pub"
     get-content $ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
 function copy-sshpublickey {
-    $ssh_public_id = join-path $env:ssh_key_directory "id_rsa.pub"
+    $ssh_public_id = join-path $env:ssh_key_directory "id_ed25519.pub"
     get-content $ssh_public_id | clip
 }
 
@@ -113,6 +111,15 @@ function dotnet-unittest ([switch]$build) {
         vstest /parallel /testcasefilter:"TestCategory!=Integration" $t.fullname
     }
 }
+
+# dotnet-suggest shim
+if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
+    $dotnetSuggestShim = ls -path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest -recurse -filter "dotnet-suggest-shim.ps1" | select -first 1
+    if (Test-Path $dotnetSuggestShim.FullName) {
+        . $dotnetSuggestShim.FullName
+    }
+}
+
 
 function rider {
     $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"

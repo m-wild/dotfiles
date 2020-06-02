@@ -1,46 +1,55 @@
 {
-    "terminal.external.windowsExec": "powershell",
-    "terminal.integrated.shell.windows": "\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
-    "files.associations": {
-        "*.conf": "ini"
-    },
-    "git.confirmSync": false,
-    // "window.zoomLevel": -0.5,
+    "terminal.external.windowsExec": "pwsh",
+    "terminal.integrated.shell.windows": "\\Program Files\\PowerShell\\7\\pwsh.exe",
+
     "editor.fontSize": 14,
     "editor.fontLigatures": true,
     "editor.fontFamily": "'Cascadia Code', Consolas, monospace",
-    "workbench.editor.showIcons": false,
-    "editor.wordWrap": "on",
-    "window.menuBarVisibility": "default",
-    "workbench.iconTheme": "vs-seti",
-    "editor.minimap.enabled": false,
-    "git.enableSmartCommit": true,
+    "editor.tabSize": 4,
     "editor.codeLens": false,
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "none",
+
+    "breadcrumbs.enabled": false,
     "window.restoreWindows": "none",
+    "workbench.colorTheme": "Nord",
+    "workbench.editor.showIcons": false,
     "workbench.startupEditor": "newUntitledFile",
-    "extensions.ignoreRecommendations": false,
-    "workbench.activityBar.visible": true,
+    "workbench.settings.editor": "json",
+    
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
     "git.autofetch": true,
     "diffEditor.ignoreTrimWhitespace": true,
+    
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "gitlens.views.repositories.location": "scm",
+    "gitlens.views.fileHistory.location": "scm",
+    "gitlens.views.lineHistory.location": "scm",
+    "gitlens.views.search.location": "scm",
+    "gitlens.views.compare.location": "scm",
+
+    "gitlens.hovers.currentLine.over": "line",
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.enabled": false,
+
+
+    "files.associations": {
+        "*.conf": "ini"
+    },
+
+    "[json]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    
+    "cSpell.language": "en-GB",
     "mssql.connections": [
-        {
-            "server": "billplusdb_dev.callplus.co.nz",
-            "database": "Callplus",
-            "authenticationType": "Integrated",
-            "profileName": "billplusdb_dev"
-        },
-        {
-            "server": "visibilldb_dev.callplus.co.nz",
-            "database": "AppMeta",
-            "authenticationType": "Integrated",
-            "profileName": "visibilldb_dev"
-        },
-        {
-            "server": "energy.db.dev.vocusgroup.co.nz",
-            "database": "Energy",
-            "authenticationType": "Integrated",
-            "profileName": "energydb_dev"
-        },
         {
             "server": "(localdb)\\mssqllocaldb",
             "database": "",
@@ -51,31 +60,5 @@
     "mssql.messagesDefaultOpen": false,
     "mssql.format.keywordCasing": "uppercase",
     "mssql.format.datatypeCasing": "uppercase",
-    "mssql.query.displayBitAsNumber": false,
-    "editor.renderWhitespace": "none",
-    "gitlens.advanced.messages": {
-        "suppressShowKeyBindingsNotice": true
-    },
-    "window.titleBarStyle": "custom",
-    "gitlens.views.repositories.location": "scm",
-    "gitlens.views.fileHistory.location": "scm",
-    "gitlens.views.lineHistory.location": "scm",
-    "gitlens.views.search.location": "scm",
-    "gitlens.views.compare.location": "scm",
-    "editor.tabSize": 2,
-    "workbench.settings.editor": "json",
-    "gitlens.hovers.currentLine.over": "line",
-    "breadcrumbs.enabled": false,
-    "[json]": {
-        "editor.defaultFormatter": "HookyQR.beautify"
-    },
-    "terminal.integrated.rendererType": "dom",
-    "[javascript]": {
-        "editor.defaultFormatter": "HookyQR.beautify"
-    },
-    "workbench.colorTheme": "Quiet Light",
-    "go.formatTool": "goimports",
-    "go.useLanguageServer": true,
-    "gitlens.currentLine.enabled": false,
-    "gitlens.codeLens.enabled": false,
+    "mssql.query.displayBitAsNumber": false
 }
