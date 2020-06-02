@@ -18,9 +18,10 @@ function bash { & "$env:USERPROFILE\scoop\apps\git\current\bin\sh.exe" --login }
 
 ## kubernetes/docker
 new-alias k kubectl -force
+new-alias kns kubenswin -force
 new-alias g git -force
 new-alias d docker -force
-new-alias kns kubenswin -force
+new-alias dcomp docker-compose -force
 
 ## widows stuff
 function mklink { cmd.exe /c mklink $args }
@@ -73,8 +74,9 @@ new-alias msbuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Profess
 new-alias vstest "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -force
 
 function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
-function open-azdevops { chrome "$(__azdevopsuri)/" }
-function new-pullrequest { chrome "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+function open-azdevops { open "$(__azdevopsuri)/" }
+function new-pullrequest { open "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+new-alias pr new-pullrequest -force
 function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
 function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
 function git-pushdev { 
@@ -87,6 +89,11 @@ function git-pushdev {
     git push -f; 
     git checkout $branch;
 }
+function Copy-AzDevopsRepo ($repo) {
+    & git clone "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Vocus/_git/$repo"
+}
+New-Alias clone Copy-AzDevopsRepo -Force
+
 
 # discover and run dotnet unit tests
 function dotnet-unittest ([switch]$build) {
@@ -139,6 +146,7 @@ function open-solution ([string] $path, [switch] $vs) {
         rider $sln.FullName
     }
 }
+new-alias sln open-solution -force
 
 ## Logging
 function get-logs ([string]$app, [switch]$formatted, [switch]$this, [string]$path) {

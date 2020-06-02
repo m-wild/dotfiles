@@ -24,5 +24,6 @@
 	prompt = false
 [core]
 	ignorecase = false
+	longpaths = true
 [credential]
 	helper = manager
