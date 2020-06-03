@@ -1,38 +1,40 @@
-{"symlink": [
-    {
-        "name": "powershell",
-        "target": "psprofile.ps1",
-        "link": "$PROFILE",
-        "enabled": true
-    },
-    {
-        "name": "git",
-        "target": ".gitconfig",
-        "link": "$env:userprofile\\.gitconfig",
-        "enabled": true
-    },
-    {
-        "name": "git",
-        "target": ".gitconfig.windows",
-        "link": "$env:userprofile\\.gitconfig.windows",
-        "enabled": true
-    },
-    {
-        "name": "vscode-settings",
-        "target": "vs-code\\settings.json",
-        "link": "$env:appdata\\Code\\User\\settings.json",
-        "enabled": true
-    },
-    {
-        "name": "vscode-snippets",
-        "target": "vs-code\\snippets",
-        "link": "$env:appdata\\Code\\User\\snippets",
-        "enabled": true
-    },
-    {
-        "name": "conemu",
-        "target": "ConEmu.xml",
-        "link": "$env:appdata\\ConEmu.xml",
-        "enabled": false
-    }
-]}
+{
+    "symlinks": [
+        {
+            "name": "powershell",
+            "target": "psprofile.ps1",
+            "link": "$PROFILE",
+            "enabled": true
+        },
+        {
+            "name": "git",
+            "target": ".gitconfig",
+            "link": "$env:userprofile\\.gitconfig",
+            "enabled": true
+        },
+        {
+            "name": "git",
+            "target": ".gitconfig.windows",
+            "link": "$env:userprofile\\.gitconfig.windows",
+            "enabled": true
+        },
+        {
+            "name": "vscode-settings",
+            "target": "vs-code\\settings.json",
+            "link": "$env:appdata\\Code\\User\\settings.json",
+            "enabled": true
+        },
+        {
+            "name": "vscode-snippets",
+            "target": "vs-code\\snippets",
+            "link": "$env:appdata\\Code\\User\\snippets",
+            "enabled": true
+        },
+        {
+            "name": "conemu",
+            "target": "ConEmu.xml",
+            "link": "$env:appdata\\ConEmu.xml",
+            "enabled": false
+        }
+    ]
+}
