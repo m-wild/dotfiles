@@ -1,83 +1,65 @@
-## powershell profile
-## michael@mwild.me
+# powershell profile
+# michael@mwild.me
 
-new-alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -force
+# Environment variables need to be set:
+#  USER_TOOLS_PATH
+#  SSH_KEY_DIRECTORY
+#  USER_HOME
+#
 
-## linux sugar
-new-alias vi code -force
-new-alias open start -force
-new-alias grep Select-String -force
-new-alias touch New-Item -force
-function ll { Get-ChildItem -Force $args }
-function which { (Get-Command -All $args).Definition }
-function tail ([switch]$f,$path) { if ($f) { Get-Content -Path $path -Tail 10 -Wait } else { Get-Content -Path $path -Tail 10 } }
-function mdc { mkdir $args[0]; cd $args[0]; }
+New-Alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -Force
+
+# Linux command aliases
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
-function lc { measure-object -line }
-function bash { & "$env:USERPROFILE\scoop\apps\git\current\bin\sh.exe" --login }
 
-## kubernetes/docker
-new-alias k kubectl -force
-new-alias kns kubenswin -force
-new-alias g git -force
-new-alias d docker -force
-new-alias dcomp docker-compose -force
+New-Alias open Start-Process -Force
+New-Alias touch New-Item -Force
+function ll { Get-ChildItem -Force $Args }
+function which { (Get-Command -All $Args).Definition }
+function tail ([switch]$f,$Path) { if ($f) { Get-Content -Path $Path -Tail 10 -Wait } else { Get-Content -Path $Path -Tail 10 } }
+function lc { Measure-Object -Line }
 
-## widows stuff
-function mklink { cmd.exe /c mklink $args }
-function reset-color { [Console]::ResetColor() }
-function edit-hosts { start-process notepad -verb runas -ArgumentList @( "$env:windir\system32\drivers\etc\hosts" ) }
-function edit-env { rundll32 sysdm.cpl,EditEnvironmentVariables }
-function reset-netadapter { ipconfig /release $args; ipconfig /flushdns; ipconfig /renew $args }
-function add-path {
-    # update the saved env
-    $userpath = [Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User).Split(';');
-    $userpath[-1] = $args[0]
-    $newpath = [String]::Join(";", $userpath) + ";"
-    Write-Host "User %PATH% will be set to $newpath"
-    [Environment]::SetEnvironmentVariable("PATH", $newpath, [EnvironmentVariableTarget]::User)
 
-    # also update the current process env
-    $env:path += $args[0] + ";"
-}
-function format-json { $args | convertfrom-json | convertto-json }
-function convertto-base64 { 
+# Windows stuff
+function mklink { cmd.exe /c mklink $Args }
+function Reset-Color { [Console]::ResetColor() }
+function Edit-Hosts { start-process notepad -verb runas -ArgumentList @( "$env:WINDIR\system32\drivers\etc\hosts" ) }
+function Edit-Env { rundll32 sysdm.cpl,EditEnvironmentVariables }
+function Reset-NetAdapter { ipconfig /release $Args; ipconfig /flushdns; ipconfig /renew $Args }
+
+
+# Data-Type Conversions
+function Format-Json { $Args | ConvertFrom-Json | ConvertTo-Json }
+function ConvertTo-Base64 { 
     param([Parameter(ValueFromPipeline=$true)] $Value)
     $Value | %{ $b = [System.Text.Encoding]::UTF8.GetBytes($_); [System.Convert]::ToBase64String($b); }
 }
-function convertfrom-base64 {
+function ConvertFrom-Base64 {
     param ([Parameter(ValueFromPipeline=$true)] $Value)
     $Value | %{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
 }
 
 function Write-SHA1Hash ($Path) { (Get-FileHash -Algorithm SHA1 $Path).Hash > "$Path.sha1" }
 
-## ssh/scp/ssl/rdp
-function ssh-copy-id {
-    $ssh_public_id = join-path $env:ssh_key_directory "id_ed25519.pub"
-    get-content $ssh_public_id | ssh $args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
+## SSH
+function Get-SshPublicKey {
+    Get-Content -Path (Join-Path $env:SSH_KEY_DIRECTORY "id_ed25519.pub")
 }
-function copy-sshpublickey {
-    $ssh_public_id = join-path $env:ssh_key_directory "id_ed25519.pub"
-    get-content $ssh_public_id | clip
+function Copy-SshPublicKey {
+    Get-SshPublicKey | ssh $Args 'umask 077; test -d .ssh || mkdir .ssh; cat >> .ssh/authorized_keys'
 }
+New-Alias ssh-copy-id Copy-SshPublicKey -Force
 
-## web
-new-alias chrome "${env:programfiles(x86)}\Google\Chrome\Application\chrome.exe" -force
-new-alias firefox "${env:programfiles(x86)}\Mozilla Firefox\firefox.exe" -force
 
-## code/build
-new-alias git-tf "$env:user_tools_path\git-tf\git-tf.cmd" -force
-new-alias msbuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe" -force
-new-alias vstest "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -force
+
+## Code/Build
+new-alias MSBuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe" -Force
 
 function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
-function open-azdevops { open "$(__azdevopsuri)/" }
-function new-pullrequest { open "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
-new-alias pr new-pullrequest -force
-function git-cleanall { git checkout -- .; git clean -dfx; git checkout master; git pull }
-function remove-buildartifacts { gci -recurse | where name -in bin,obj | rm -recurse -force }
-function git-pushdev { 
+function Open-AZDevOps { open "$(__azdevopsuri)/" }
+function New-PullRequest { open "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+New-Alias pr New-PullRequest -Force
+function Push-DevBranch { 
     $branch = git rev-parse --abbrev-ref HEAD; 
     Write-Host "Step 1: Pushing $branch..." -ForegroundColor Green
     git push; 
@@ -87,30 +69,11 @@ function git-pushdev {
     git push -f; 
     git checkout $branch;
 }
-function Copy-AzDevopsRepo ($repo) {
+function Copy-AZDevOpsRepo ($repo) {
     & git clone "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Vocus/_git/$repo"
 }
-New-Alias clone Copy-AzDevopsRepo -Force
+New-Alias clone Copy-AZDevOpsRepo -Force
 
-
-# discover and run dotnet unit tests
-function dotnet-unittest ([switch]$build) {
-    if ($build) {
-        $sln = (gci *.sln)[0]
-        msbuild /t:rebuild /v:minimal /m $sln
-    }
-    $tested = @()
-    $tests = gci -Recurse | where { `
-        $_.directoryname -ilike '*bin\debug*' `
-        -and $_.name -ilike '*test*.dll' `
-        -and $_.name -inotlike '*testadapter*' `
-    }
-    foreach ($t in $tests) {
-        if ($tested -icontains $t.name) { continue }
-        $tested += $t.name
-        vstest /parallel /testcasefilter:"TestCategory!=Integration" $t.fullname
-    }
-}
 
 # dotnet-suggest shim
 if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
@@ -122,150 +85,110 @@ if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
 
 
 function rider {
-    $rider_path = "$env:localappdata\JetBrains\Toolbox\apps\Rider\ch-0"
-    $rider_version = ls $rider_path | where mode -like 'd*' | where name -notlike '*.plugins' | sort | select -last 1
-    start-process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $args )
+    $rider_path = "$env:LOCALAPPDATA\JetBrains\Toolbox\apps\Rider\ch-0"
+    $rider_version = Get-ChildItem $rider_path | Where-Object Mode -Like 'd*' | Where-Object Name -NotLike '*.plugins' | Sort-Object | Select-Object -Last 1
+    Start-Process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $Args )
 }
-function open-solution ([string] $path, [switch] $vs) {
-    if (!$path) {
-        $path = get-location
+
+function Open-Solution ([string] $Path, [switch] $VS) {
+    if (!$Path) {
+        $Path = Get-Location
     }
 
-    $allslns = gci -filter *.sln -Path $path -Depth 3
+    $all_slns = Get-ChildItem -Filter *.sln -Path $path -Depth 3
 
-    if ($allslns.count -eq 1) {
-        $sln = $allslns | select -first 1
+    if ($all_slns.count -eq 1) {
+        $sln = $all_slns | Select-Object -First 1
     } else {
         $choices = @()
-        for ($i = 0; $i -lt $allslns.count; $i++) {
-            $s = $allslns[$i]
+        for ($i = 0; $i -lt $all_slns.count; $i++) {
+            $s = $all_slns[$i]
             $choices += New-Object System.Management.Automation.Host.ChoiceDescription "&$i $($s.Name)", $s.FullName
         }
 
         $choiceindex = $host.ui.PromptForChoice("", "Multiple solutions found...", $choices, 0)
-        $sln = $allslns[$choiceindex]
+        $sln = $all_slns[$choiceindex]
     }
     
     write-host "Opening solution $($sln.Name)"
-    if ($vs) {
+    if ($VS) {
         open $sln.FullName
     } else {
         rider $sln.FullName
     }
 }
-new-alias sln open-solution -force
-
-## Logging
-function get-logs ([string]$app, [switch]$formatted, [switch]$this, [string]$path) {
-	if ($this) {
-        $app = (split-path (pwd) -leaf)
-    }
-	if ($app) {
-        $date = get-date -Format 'yyyyMMdd'
-		$path = "$env:app_logs\$app\$app.$date.log"
-	}
-	    
-    if ($formatted) {
-        _getlogformatted -path $path
-    } else {
-        _getlogjson -path $path
-    }
-}
-function _getlogjson ($path) {
-    get-content -tail 0 -wait -path $path | %{convertfrom-json $_} 
-}
-function _getlogformatted ($path) { 
-    _getlogjson $path | select timestamp,severity,message,exception | %{
-        if ($_.severity -in "error","fatal") {
-            _writelogformatted $_ "red"
-        } elseif ($_.severity -eq "warn") {
-            _writelogformatted $_ "yellow"
-        } elseif ($_.severity -in "trace","debug","verbose") {
-            _writelogformatted $_ "darkgray"
-        } else {
-            _writelogformatted $_ "gray"
-        }
-    }
-}
-function _writelogformatted ($log, $color) { 
-    write-host $log.timestamp.substring(11) $log.severity.padright(5) $log.message $log.exception -ForegroundColor $color 
-}
+new-alias sln Open-Solution -Force
 
 ## vanity
-function get-sysinfo {
+function Get-SysInfo {
     $os   = Get-WmiObject Win32_OperatingSystem
     $proc = Get-WmiObject Win32_Processor
     $sys  = Get-WmiObject Win32_ComputerSystem
     $gpu  = Get-WmiObject Win32_DisplayConfiguration
 
-    $ram = "$([math]::round($sys.totalPhysicalMemory / 1GB))GB"
+    $ram = "$([math]::round($sys.TotalPhysicalMemory / 1GB))GB"
 
-    write-host $os.caption $os.osarchitecture $os.version
-    write-host $proc.name $ram
-    write-host $gpu.devicename
+    Write-Host $os.Caption $os.OSArchitecture $os.Version
+    Write-Host $proc.Name $ram
+    Write-Host $gpu.DeviceName
 }
 
-function test-isadmin {  # test if the current shell is elevated
+function Test-IsAdmin {  # test if the current shell is elevated
     return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 }
 
-Set-Variable HOME $env:user_home -Force  			 # Set and force overwrite of the $HOME variable
-(get-psprovider 'FileSystem').Home = $env:user_home  # set the "~" shortcut
+Set-Variable HOME $env:USER_HOME -Force  			 # Set and force overwrite of the $HOME variable
+(Get-PSProvider 'FileSystem').Home = $env:USER_HOME  # set the "~" shortcut
 
 # z.ps https://github.com/JannesMeyer/z.ps
-if (test-path "$env:user_tools_path\pwsh\modules\z") {
-    import-module z
-    set-alias z search-navigationhistory -force
+if (Test-Path "$env:USER_TOOLS_PATH\pwsh\modules\z") {
+    Import-Module z
+    Set-Alias z Search-NavigationHistory -Force
 }
 
 # custom prompt w/ logging
-$global:prompt_prev_dir = Get-Location
+$global:prompt_prev_dir     = Get-Location
 $global:prompt_prev_hist_id = 0
-$global:log_path        = join-path $env:user_home ".logs"
-$global:prompt_log_file = Join-Path $global:log_path "\shell-history-$(get-date -f 'yyyy-MM').log"
+$global:prompt_log_path     = Join-Path $env:USER_HOME ".logs\shell-history-$(Get-Date -Format 'yyyy-MM').log"
 
 function prompt {
+    # Write command history to the log
 	$prev_LASTEXITCODE = $LASTEXITCODE
     $hist = Get-History -Count 1
     if ($hist.Id -gt $global:prompt_prev_hist_id) {  # log new entries only
-        add-content -path $global:prompt_log_file -value "$($hist.StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) $pid [$global:prompt_prev_path] $($hist.CommandLine)"
+        Add-Content -Path $global:prompt_log_path -Value "$($hist.StartExecutionTime.toString('yyyy-MM-dd.HH:mm:ss')) $pid [$global:prompt_prev_path] $($hist.CommandLine)"
     }
+
     $global:prompt_prev_hist_id = $hist.Id
+    $global:prompt_prev_path = Get-Location
 
-    $cd = Get-Location
-    $global:prompt_prev_path = $cd
-
-    # update z.ps
-    if (get-command 'update-navigationhistory' -erroraction SilentlyContinue) {
-        update-navigationhistory $pwd.Path -erroraction silentlycontinue
+    # Update z.ps navigation history
+    if (Get-Command 'Update-NavigationHistory' -ErrorAction SilentlyContinue) {
+        Update-NavigationHistory $PWD.Path -ErrorAction SilentlyContinue
     }
 
-    write-host "[$(split-path $cd -leaf)" -NoNewLine
-
-    # print git info
-    if ((get-command 'write-vcsstatus' -erroraction SilentlyContinue)  `
-        -and (get-command 'git.exe' -erroraction SilentlyContinue)) {
-        write-vcsstatus
+   
+    $prompt = ""
+    # Use posh-git prompt if available
+    if ((Get-Command 'Write-VcsStatus' -ErrorAction SilentlyContinue) `
+            -And (Get-Command 'git.exe' -ErrorAction SilentlyContinue)) {
+        $prompt += & $GitPromptScriptBlock
     }
     
-	write-host "]" -NoNewLine
-
-    # pretty print prompt
-    if (test-isadmin) {
-        $host.UI.RawUI.WindowTitle = "[Admin] $cd"
-        write-host "#" -NoNewLine -ForegroundColor red  
-    } else {
-        $host.UI.RawUI.WindowTitle = "$cd"
-        write-host "$" -NoNewline
+    else {
+        $prompt += "[$(Get-Location | Split-Path -Leaf)]$ "
     }
-
+    
 	$LASTEXITCODE = $prev_LASTEXITCODE
-    return " " # supposed to return the prompt string, but then we cant get ~color~
+    return $prompt
 }
 
-if (test-isadmin) { Set-Location ~ }  # we need to do this manually..
+if (Test-IsAdmin) { Set-Location ~ }  # we need to do this manually..
 
 # have to do this after setting the prompt or we get the default posh-git prompt
-import-module posh-git 
-$global:GitPromptSettings.BeforeText = ' '
-$global:GitPromptSettings.AfterText = ''
+Import-Module posh-git
+$global:GitPromptSettings.DefaultPromptPrefix = "["
+$global:GitPromptSettings.DefaultPromptSuffix = "]$ "
+$global:GitPromptSettings.BeforeStatus = ""
+$global:GitPromptSettings.AfterStatus = ""
+$global:GitPromptSettings.DefaultPromptPath = '$(Get-Location | Split-Path -Leaf)'

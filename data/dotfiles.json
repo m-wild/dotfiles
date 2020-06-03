@@ -2,7 +2,7 @@
     {
         "name": "powershell",
         "target": "psprofile.ps1",
-        "link": "$env:userprofile\\Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1",
+        "link": "$env:userprofile\\Documents\\PowerShell\\Microsoft.PowerShell_profile.ps1",
         "enabled": true
     },
     {
