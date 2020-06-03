@@ -85,9 +85,9 @@ if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
 
 
 function rider {
-    $rider_path = "$env:LOCALAPPDATA\JetBrains\Toolbox\apps\Rider\ch-0"
-    $rider_version = Get-ChildItem $rider_path | Where-Object Mode -Like 'd*' | Where-Object Name -NotLike '*.plugins' | Sort-Object | Select-Object -Last 1
-    Start-Process "$rider_path\$rider_version\bin\rider64.exe" -ArgumentList @( $Args )
+    $rider_dir = Join-Path $env:LOCALAPPDATA "JetBrains\Toolbox\apps\Rider\ch-0" | Get-ChildItem | where mode -Like 'd*' | where name -NotLike '*.plugins' | sort | select -Last 1
+    $rider_path = Join-Path $rider_dir "bin\rider64.exe"
+    Start-Process $rider_path -ArgumentList @( $Args )
 }
 
 function Open-Solution ([string] $Path, [switch] $VS) {
