@@ -59,16 +59,42 @@ function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git
 function Open-AZDevOps { open "$(__azdevopsuri)/" }
 function New-PullRequest { open "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 New-Alias pr New-PullRequest -Force
-function Push-DevBranch { 
-    $branch = git rev-parse --abbrev-ref HEAD; 
-    Write-Host "Step 1: Pushing $branch..." -ForegroundColor Green
-    git push; 
-    Write-Host "Step 2: Reset dev to $branch..." -ForegroundColor Green
-    git checkout dev; git reset --hard $branch; 
-    Write-Host "Step 3: Force push dev" -ForegroundColor Green
-    git push -f; 
-    git checkout $branch;
+
+function Push-DevBranch {
+    [CmdletBinding()]
+    param (
+        [Switch]$Force
+    ) 
+    process {
+        $ErrorActionPreference = 'Stop'
+
+        $branch = git rev-parse --abbrev-ref HEAD; 
+        Write-Host "• Pushing current branch ($branch)..." -ForegroundColor Blue
+        git fetch
+        git push
+
+        if ($Force) {
+            Write-Host "• Reset dev to $branch..." -ForegroundColor Blue
+            git checkout dev
+            git reset --hard $branch
+
+            Write-Host "• Force push dev" -ForegroundColor Blue
+            git push -f
+
+        } else {
+            Write-Host "• Merge dev to $branch..." -ForegroundColor Blue
+            git checkout dev
+            git reset --hard origin/dev
+            git merge $branch
+
+            Write-Host "• Push dev" -ForegroundColor Blue
+            git push
+        }
+            
+        git checkout $branch
+    }
 }
+
 function Copy-AZDevOpsRepo ($repo) {
     & git clone "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Vocus/_git/$repo"
 }
