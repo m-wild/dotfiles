@@ -7,7 +7,7 @@
 #  USER_HOME
 #
 
-New-Alias dotfiles "$env:user_tools_path\dotfiles\dotfiles.ps1" -Force
+New-Alias dotfiles "$env:USER_TOOLS_PATH\dotfiles\dotfiles.ps1" -Force
 
 # Linux command aliases
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
@@ -32,11 +32,11 @@ function Reset-NetAdapter { ipconfig /release $Args; ipconfig /flushdns; ipconfi
 function Format-Json { $Args | ConvertFrom-Json | ConvertTo-Json }
 function ConvertTo-Base64 { 
     param([Parameter(ValueFromPipeline=$true)] $Value)
-    $Value | %{ $b = [System.Text.Encoding]::UTF8.GetBytes($_); [System.Convert]::ToBase64String($b); }
+    $Value | ForEach-Object{ $b = [System.Text.Encoding]::UTF8.GetBytes($_); [System.Convert]::ToBase64String($b); }
 }
 function ConvertFrom-Base64 {
     param ([Parameter(ValueFromPipeline=$true)] $Value)
-    $Value | %{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
+    $Value | ForEach-Object{ $b = [System.Convert]::FromBase64String($_); [System.Text.Encoding]::UTF8.GetString($b); }
 }
 
 function Write-SHA1Hash ($Path) { (Get-FileHash -Algorithm SHA1 $Path).Hash > "$Path.sha1" }
@@ -63,7 +63,7 @@ New-Alias pr New-PullRequest -Force
 function Push-DevBranch {
     [CmdletBinding()]
     param (
-        [Switch]$Force
+        [Switch] $Force
     ) 
     process {
         $ErrorActionPreference = 'Stop'
@@ -103,7 +103,7 @@ New-Alias clone Copy-AZDevOpsRepo -Force
 
 # dotnet-suggest shim
 if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
-    $dotnetSuggestShim = ls -path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest -recurse -filter "dotnet-suggest-shim.ps1" | select -first 1
+    $dotnetSuggestShim = Get-ChildItem -Path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest -recurse -filter "dotnet-suggest-shim.ps1" | Select-Object -first 1
     if (Test-Path $dotnetSuggestShim.FullName) {
         . $dotnetSuggestShim.FullName
     }
@@ -111,39 +111,45 @@ if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
 
 
 function rider {
-    $rider_dir = Join-Path $env:LOCALAPPDATA "JetBrains\Toolbox\apps\Rider\ch-0" | Get-ChildItem | where mode -Like 'd*' | where name -NotLike '*.plugins' | sort | select -Last 1
+    $rider_dir = Join-Path $env:LOCALAPPDATA "JetBrains\Toolbox\apps\Rider\ch-0" | Get-ChildItem | Where-Object mode -Like 'd*' | Where-Object name -NotLike '*.plugins' | Sort-Object | Select-Object -Last 1
     $rider_path = Join-Path $rider_dir "bin\rider64.exe"
     Start-Process $rider_path -ArgumentList @( $Args )
 }
 
-function Open-Solution ([string] $Path, [switch] $VS) {
-    if (!$Path) {
-        $Path = Get-Location
-    }
+function Open-Solution {
+    [CmdletBinding()]
+    param (
+        [String] $Path = (Get-Location),
+        [Switch] $VS
+    )
+    process {
+        $solutions = Get-ChildItem -Filter *.sln -Path $Path -Depth 3
 
-    $all_slns = Get-ChildItem -Filter *.sln -Path $path -Depth 3
+        if ($solutions.count -eq 0) {
+            Write-Host "No solutions found..."
+            return
+        } elseif ($solutions.count -eq 1) {
+            $sln = $solutions | Select-Object -First 1
+        } else {
+            $choices = @()
+            for ($i = 0; $i -lt $solutions.count; $i++) {
+                $s = $solutions[$i]
+                $choices += New-Object System.Management.Automation.Host.ChoiceDescription "&$i $($s.Name)", $s.FullName
+            }
 
-    if ($all_slns.count -eq 1) {
-        $sln = $all_slns | Select-Object -First 1
-    } else {
-        $choices = @()
-        for ($i = 0; $i -lt $all_slns.count; $i++) {
-            $s = $all_slns[$i]
-            $choices += New-Object System.Management.Automation.Host.ChoiceDescription "&$i $($s.Name)", $s.FullName
+            $choiceindex = $host.ui.PromptForChoice("", "Multiple solutions found...", $choices, 0)
+            $sln = $solutions[$choiceindex]
         }
-
-        $choiceindex = $host.ui.PromptForChoice("", "Multiple solutions found...", $choices, 0)
-        $sln = $all_slns[$choiceindex]
-    }
-    
-    write-host "Opening solution $($sln.Name)"
-    if ($VS) {
-        open $sln.FullName
-    } else {
-        rider $sln.FullName
+        
+        Write-Host "Opening solution $($sln.Name)"
+        if ($VS) {
+            open $sln.FullName
+        } else {
+            rider $sln.FullName
+        }
     }
 }
-new-alias sln Open-Solution -Force
+New-Alias sln Open-Solution -Force
 
 ## vanity
 function Get-SysInfo {
@@ -160,7 +166,7 @@ function Get-SysInfo {
 }
 
 function Test-IsAdmin {  # test if the current shell is elevated
-    return ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+    ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 }
 
 Set-Variable HOME $env:USER_HOME -Force  			 # Set and force overwrite of the $HOME variable
