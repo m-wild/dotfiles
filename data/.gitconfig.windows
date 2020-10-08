@@ -3,5 +3,9 @@
 	editor = code --wait
 [diff]
 	tool = vscode
+
 [difftool "vscode"]
 	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
+
+[difftool "bc"]
+	path = bcomp.exe

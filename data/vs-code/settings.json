@@ -10,10 +10,11 @@
     "editor.wordWrap": "on",
     "editor.minimap.enabled": false,
     "editor.renderWhitespace": "none",
-
+    
     "breadcrumbs.enabled": false,
     "window.restoreWindows": "none",
-    "workbench.colorTheme": "Nord",
+    "window.zoomLevel": 0,
+    "workbench.colorTheme": "GitHub Light",
     "workbench.editor.showIcons": false,
     "workbench.startupEditor": "newUntitledFile",
     "workbench.settings.editor": "json",
@@ -42,6 +43,9 @@
     },
 
     "[json]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "[jsonc]": {
         "editor.defaultFormatter": "HookyQR.beautify"
     },
     "[javascript]": {
