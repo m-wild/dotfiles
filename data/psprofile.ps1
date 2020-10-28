@@ -2,12 +2,8 @@
 # michael@mwild.me
 
 # Environment variables need to be set:
-#  USER_TOOLS_PATH
 #  SSH_KEY_DIRECTORY
-#  USER_HOME
 #
-
-New-Alias dotfiles "$env:USER_TOOLS_PATH\dotfiles\dotfiles.ps1" -Force
 
 # Linux command aliases
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
@@ -169,19 +165,12 @@ function Test-IsAdmin {  # test if the current shell is elevated
     ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 }
 
-Set-Variable HOME $env:USER_HOME -Force  			 # Set and force overwrite of the $HOME variable
-(Get-PSProvider 'FileSystem').Home = $env:USER_HOME  # set the "~" shortcut
 
-# z.ps https://github.com/JannesMeyer/z.ps
-if (Test-Path "$env:USER_TOOLS_PATH\pwsh\modules\z") {
-    Import-Module z
-    Set-Alias z Search-NavigationHistory -Force
-}
 
 # custom prompt w/ logging
 $global:prompt_prev_dir     = Get-Location
 $global:prompt_prev_hist_id = 0
-$global:prompt_log_path     = Join-Path $env:USER_HOME ".logs\shell-history-$(Get-Date -Format 'yyyy-MM').log"
+$global:prompt_log_path     = Join-Path $env:USERPROFILE ".logs\shell-history-$(Get-Date -Format 'yyyy-MM').log"
 
 function prompt {
     # Write command history to the log
@@ -193,12 +182,6 @@ function prompt {
 
     $global:prompt_prev_hist_id = $hist.Id
     $global:prompt_prev_path = Get-Location
-
-    # Update z.ps navigation history
-    if (Get-Command 'Update-NavigationHistory' -ErrorAction SilentlyContinue) {
-        Update-NavigationHistory $PWD.Path -ErrorAction SilentlyContinue
-    }
-
    
     $prompt = ""
     # Use posh-git prompt if available

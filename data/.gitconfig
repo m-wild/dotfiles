@@ -1,6 +1,12 @@
 [include]
 	path = ~/.gitconfig.local
-	path = .gitconfig.windows
+[core]
+	ignorecase = false
+	longpaths = true
+	autocrlf = true
+	editor = code --wait
+[credential]
+	helper = manager
 [push]
 	default = current
 [pull]
@@ -20,10 +26,12 @@
 	required = true
 	clean = git-lfs clean -- %f
 	process = git-lfs filter-process
+
+
+[diff]
+	tool = vscode
 [difftool]
 	prompt = false
-[core]
-	ignorecase = false
-	longpaths = true
-[credential]
-	helper = manager
+[difftool "vscode"]
+	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
+
