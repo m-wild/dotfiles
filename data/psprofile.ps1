@@ -59,7 +59,8 @@ New-Alias pr New-PullRequest -Force
 function Push-DevBranch {
     [CmdletBinding()]
     param (
-        [Switch] $Force
+        [Switch] $Force,
+        [String] $DevBranch = 'dev'
     ) 
     process {
         $ErrorActionPreference = 'Stop'
@@ -70,21 +71,28 @@ function Push-DevBranch {
         git push
 
         if ($Force) {
-            Write-Host "• Reset dev to $branch..." -ForegroundColor Blue
-            git checkout dev
+            Write-Host "• Reset $DevBranch to $branch..." -ForegroundColor Blue
+            git branch -D $DevBranch
+            git checkout $DevBranch
             git reset --hard $branch
 
-            Write-Host "• Force push dev" -ForegroundColor Blue
+            Write-Host "• Force push $DevBranch" -ForegroundColor Blue
             git push -f
 
         } else {
-            Write-Host "• Merge dev to $branch..." -ForegroundColor Blue
-            git checkout dev
-            git reset --hard origin/dev
+            Write-Host "• Merge $DevBranch to $branch..." -ForegroundColor Blue
+            git branch -D $DevBranch
+            git checkout $DevBranch
+            git reset --hard origin/$DevBranch
             git merge $branch
 
-            Write-Host "• Push dev" -ForegroundColor Blue
-            git push
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "• Push $DevBranch" -ForegroundColor Blue
+                git push
+            } else {
+                Write-Host "• Merge conflicts must be resolved" -ForegroundColor Yellow
+            }
+
         }
             
         git checkout $branch
