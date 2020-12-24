@@ -6,7 +6,7 @@
 	autocrlf = true
 	editor = code --wait
 [credential]
-	helper = manager
+	helper = manager-core
 [push]
 	default = current
 [pull]
