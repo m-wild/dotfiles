@@ -5,8 +5,6 @@
 	longpaths = true
 	autocrlf = true
 	editor = code --wait
-[credential]
-	helper = manager-core
 [push]
 	default = current
 [pull]
@@ -35,3 +33,7 @@
 [difftool "vscode"]
 	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
 
+[credential]
+	helper = manager-core
+[credential "https://dev.azure.com"]
+	useHttpPath = true

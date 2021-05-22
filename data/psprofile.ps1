@@ -51,43 +51,43 @@ New-Alias ssh-copy-id Copy-SshPublicKey -Force
 ## Code/Build
 new-alias MSBuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe" -Force
 
-function __azdevopsuri { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
-function Open-AZDevOps { open "$(__azdevopsuri)/" }
-function New-PullRequest { open "$(__azdevopsuri)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
+function __azdevops-repo-url { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
+function Open-AZDevOps { open "$(__azdevops-repo-url)/" }
+function New-PullRequest { open "$(__azdevops-repo-url)/pullrequestcreate?sourceRef=$(git symbolic-ref --short HEAD)&targetRef=master" }
 New-Alias pr New-PullRequest -Force
 
-function Push-DevBranch {
+function git-deploy {
     [CmdletBinding()]
     param (
-        [Switch] $Force,
-        [String] $DevBranch = 'dev'
+        [Switch] $force,
+        [String] $branch = 'dev'
     ) 
     process {
         $ErrorActionPreference = 'Stop'
 
-        $branch = git rev-parse --abbrev-ref HEAD; 
-        Write-Host "• Pushing current branch ($branch)..." -ForegroundColor Blue
+        $current_branch = git rev-parse --abbrev-ref HEAD; 
+        Write-Host "• Pushing current branch ($current_branch)..." -ForegroundColor Blue
         git fetch
         git push
 
         if ($Force) {
-            Write-Host "• Reset $DevBranch to $branch..." -ForegroundColor Blue
-            git branch -D $DevBranch
-            git checkout $DevBranch
-            git reset --hard $branch
+            Write-Host "• Reset $branch to $current_branch..." -ForegroundColor Blue
+            git branch -D $branch
+            git checkout $branch
+            git reset --hard $current_branch
 
-            Write-Host "• Force push $DevBranch" -ForegroundColor Blue
+            Write-Host "• Force push $branch" -ForegroundColor Blue
             git push -f
 
         } else {
-            Write-Host "• Merge $DevBranch to $branch..." -ForegroundColor Blue
-            git branch -D $DevBranch
-            git checkout $DevBranch
-            git reset --hard origin/$DevBranch
-            git merge $branch
+            Write-Host "• Merge $branch to $current_branch..." -ForegroundColor Blue
+            git branch -D $branch
+            git checkout $branch
+            git reset --hard origin/$branch
+            git merge $current_branch
 
             if ($LASTEXITCODE -eq 0) {
-                Write-Host "• Push $DevBranch" -ForegroundColor Blue
+                Write-Host "• Push $branch" -ForegroundColor Blue
                 git push
             } else {
                 Write-Host "• Merge conflicts must be resolved" -ForegroundColor Yellow
@@ -95,7 +95,7 @@ function Push-DevBranch {
 
         }
             
-        git checkout $branch
+        git checkout $current_branch
     }
 }
 
@@ -103,6 +103,36 @@ function Copy-AZDevOpsRepo ($repo) {
     & git clone "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Vocus/_git/$repo"
 }
 New-Alias clone Copy-AZDevOpsRepo -Force
+
+
+function git-switch() {
+    $branches =  git branch $args | ` # args allows passing '--all' for example
+        rg --invert-match '\*' | ` # remove the currently selected branch
+        %{ $_.trim() } | ` # remove whitespace from start of line
+        where { $_ -notlike '*->*' } | ` # remove the 'HEAD -> master' line...
+        %{ if ($_.startsWith('remotes/origin/')) { $_.substring('remotes/origin/'.length) } else { $_ }  } | ` # show remote branches as if local
+        select -unique # we may have a remote and local copy of a branch, only show one
+
+
+    $branch = (echo $branches | fzf)
+    if ($branch) {
+        git switch $branch
+    }
+}
+
+
+function git-delete-branches() {
+    $branches = git branch | `
+        rg --invert-match '\*' | ` # remove the currently selected branch
+        %{ $_.trim() } | ` # remove whitespace from start of line
+        fzf --multi --preview="git lg {} --color"
+
+    if ($branches) {
+        echo $branches | %{ git branch --delete --force $_ }
+    }
+}
+
+
 
 
 # dotnet-suggest shim
