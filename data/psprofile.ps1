@@ -49,7 +49,7 @@ New-Alias ssh-copy-id Copy-SshPublicKey -Force
 
 
 ## Code/Build
-new-alias MSBuild "${env:programfiles(x86)}\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe" -Force
+new-alias MSBuild "${env:programfiles}\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" -Force
 
 function __azdevops-repo-url { "https://dev.azure.com/vocusgroupnz/vocus/_git/" + (git remote get-url origin).split('/')[-1] }
 function Open-AZDevOps { open "$(__azdevops-repo-url)/" }
@@ -105,6 +105,15 @@ function Copy-AZDevOpsRepo ($repo) {
 New-Alias clone Copy-AZDevOpsRepo -Force
 
 
+function ArchiveAZDevOpsRepo ($repo) {
+    git clone --bare "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Vocus/_git/$repo"
+    push-location
+    cd "$repo.git"
+    git push --mirror "https://vocusgroupnz@dev.azure.com/vocusgroupnz/Archive/_git/$repo"
+    pop-location
+}
+
+
 function git-switch() {
     $branches =  git branch $args | ` # args allows passing '--all' for example
         rg --invert-match '\*' | ` # remove the currently selected branch
@@ -133,8 +142,6 @@ function git-delete-branches() {
 }
 
 
-
-
 # dotnet-suggest shim
 if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
     $dotnetSuggestShim = Get-ChildItem -Path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest -recurse -filter "dotnet-suggest-shim.ps1" | Select-Object -first 1
@@ -145,9 +152,23 @@ if (test-path $env:USERPROFILE\.dotnet\tools\.store\dotnet-suggest) {
 
 
 function rider {
-    $rider_dir = Join-Path $env:LOCALAPPDATA "JetBrains\Toolbox\apps\Rider\ch-0" | Get-ChildItem | Where-Object mode -Like 'd*' | Where-Object name -NotLike '*.plugins' | Sort-Object | Select-Object -Last 1
-    $rider_path = Join-Path $rider_dir "bin\rider64.exe"
-    Start-Process $rider_path -ArgumentList @( $Args )
+    if (test-path 'C:\Program Files\JetBrains\JetBrains Rider*') {
+        $rider_dir = Get-ChildItem 'C:\Program Files\JetBrains\' -Filter 'JetBrains Rider*' | Sort-Object | Select-Object -Last 1
+    }
+    else {
+        $channels = Join-Path $env:LOCALAPPDATA "JetBrains\Toolbox\apps\Rider\" | Get-ChildItem # e.g. ch-0, ch-1, ch-2
+        $channel = $channels[0]
+    
+        $rider_dir = $channel | Get-ChildItem | Where-Object mode -Like 'd*' | Where-Object name -NotLike '*.plugins' | Sort-Object | Select-Object -Last 1
+    }
+
+    if (Test-Path $rider_dir) {
+        $rider_path = Join-Path $rider_dir 'bin\rider64.exe'
+        Start-Process $rider_path -ArgumentList @( $Args )
+    }
+    else {
+        throw "Couldn't find rider64.exe"
+    }
 }
 
 function Open-Solution {

@@ -37,3 +37,5 @@
 	helper = manager-core
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+[credential "helperselector"]
+	selected = manager-core
