@@ -34,8 +34,8 @@
 	cmd = code --new-window --wait --diff \"$LOCAL\" \"$REMOTE\"
 
 [credential]
-	helper = manager-core
+	helper = manager
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [credential "helperselector"]
-	selected = manager-core
+	selected = manager

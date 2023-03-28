@@ -8,6 +8,13 @@
 # Linux command aliases
 Set-PSReadlineKeyHandler -Key Tab -Function Complete # make tab work like bash
 
+# replace 'Ctrl+t' and 'Ctrl+r' with fzf:
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+
+# replace tab expansion with fzf:
+Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
+
+
 New-Alias open Start-Process -Force
 New-Alias touch New-Item -Force
 function ll { Get-ChildItem -Force $Args }
